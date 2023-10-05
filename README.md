@@ -50,3 +50,13 @@ Server Requirements
  <li>Avoid MySQL sub queries if it does not require</li>
  <li>For more information, please read the document <a href="https://drive.google.com/drive/folders/1_nxEPw01QnVkVQfZ2WtXyeX7NcQ6ENdh" target='_blank'>Code Standard</a>
 </ol>
+
+# References
+<ol>
+ <li>https://www.itsolutionstuff.com/post/laravel-10-user-roles-and-permissions-tutorialexample.html</li> 
+<ol> 
+
+# Search Key
+<ol>
+  <li>KEY : MULTIPERMISSION</li>
+</ol>
