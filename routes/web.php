@@ -28,4 +28,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// KEY : MULTIPERMISSION starts
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('roles', App\Http\Controllers\RoleController::class);
+    Route::resource('users', App\Http\Controllers\UserController::class);
+    Route::resource('products', App\Http\Controllers\ProductController::class);
+});
+// KEY : MULTIPERMISSION ends
+
 require __DIR__.'/auth.php';

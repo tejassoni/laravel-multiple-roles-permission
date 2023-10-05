@@ -16,14 +16,15 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+            
                  <!-- KEY : MULTIPERMISSION starts -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index') || request()->routeIs('users.create') || request()->routeIs('users.edit') || request()->routeIs('users.show')">
                         Users
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('roles.index')">
                         Role
                     </x-nav-link>
                 </div>
