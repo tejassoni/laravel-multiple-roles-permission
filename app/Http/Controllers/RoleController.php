@@ -3,11 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role; // KEY : MULTIPERMISSION
+use Spatie\Permission\Models\Permission; // KEY : MULTIPERMISSION
 
 class RoleController extends Controller
 {
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function __construct()
+    {
+        $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:role-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:role-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:role-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -25,7 +39,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permission = Permission::get();
-        return view('roles.create', compact('permission'));
+        $permissions = Permission::get();
+        return view('roles.create', compact('permissions'));
     }
 }

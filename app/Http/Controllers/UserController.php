@@ -12,7 +12,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return response()->view('user.index', [
+        return response()->view('users.index', [
             'users' => User::orderBy('updated_at', 'desc')->get(),
         ]);
     }
@@ -22,7 +22,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.create');
+        return view('users.create');
     }
 
     /**
