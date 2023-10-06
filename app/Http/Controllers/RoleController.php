@@ -42,4 +42,44 @@ class RoleController extends Controller
         $permissions = Permission::get();
         return view('roles.create', compact('permissions'));
     }
+
+     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+     public function store(Request $request){ 
+         $this->validate($request, [ 
+             'name' => 'required|unique:roles,name', 
+             'permission' => 'required', 
+         ]);      
+         $role = Role::create(['name' => $request->input('name')]); 
+         $role->syncPermissions($request->input('permission'));      
+         return redirect()->route('roles.index') 
+                         ->with('success','Role created successfully'); 
+     }
+
+       /**
+
+     * Display the specified resource.
+
+     *
+
+     * @param  int  $id
+
+     * @return \Illuminate\Http\Response
+
+     */
+
+    public function show($id)
+    {
+        $role = Role::find($id);
+        $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
+            ->where("role_has_permissions.role_id",$id)
+            ->get();
+        return view('roles.show',compact('role','rolePermissions'));
+    }
+
+
 }
