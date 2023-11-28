@@ -29,7 +29,17 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('roles.index')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('category.index')" :active="request()->routeIs('category')">
+                        Parent Category
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('subcategory.index')" :active="request()->routeIs('subcategory')">
+                        SubCategory
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('products.index')" :active="request()->routeIs('products')">
                         Product
                     </x-nav-link>
                 </div>

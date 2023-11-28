@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response()->view('users.index', [
-            'users' => User::orderBy('updated_at', 'desc')->get(),
-        ]);
+        dd('product');
     }
 
     /**
@@ -22,7 +19,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        //
     }
 
     /**
@@ -36,9 +33,9 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(string $id)
     {
-        view('users.show',compact('user'));
+        //
     }
 
     /**

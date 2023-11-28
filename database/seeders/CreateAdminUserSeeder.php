@@ -24,15 +24,18 @@ class CreateAdminUserSeeder extends Seeder
 
         $role = Role::findByName('Administrator');      
         $grantPermissions = [
-            'role-list', 
+            'role-list',
+            'role-show', 
             'role-create', 
             'role-edit', 
             // 'role-delete', 
             'product-list', 
+            'product-show', 
             'product-create', 
             'product-edit', 
             'product-delete',
             'order-list', 
+            'order-show', 
             'order-create', 
             'order-edit', 
             // 'order-delete'  
