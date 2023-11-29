@@ -34,7 +34,7 @@
                             @foreach($users as $user)
                                 <tr>
                                     <td class="px-4 py-2 border">{{ $user->name }}</td>
-                                    <td class="px-4 py-2 border">{{ $user->email }}</td>
+                                    <td class="px-4 py-2 border"><a href="mailto:{{ $user->email }}" class="underline">{{ $user->email }}</a></td>
                                     <td class="px-4 py-2 border">
                                       
                                           @foreach($user->getRoleNames() as $v)   
@@ -44,7 +44,7 @@
                                     </td>
                                     <td class="px-4 py-2 border">
                                         <form action="{{ route('users.destroy', $user->id) }}" method="POST">
-                                            <a href="{{ route('users.show', $user->id) }}" class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25">
+                                            <a href="{{ route('users.show', $user->id) }}" class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-500 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25">
                                                 Show
                                             </a>
                                             <a href="{{ route('users.edit', $user->id) }}" class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25">
