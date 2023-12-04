@@ -14,7 +14,8 @@
                 <form action="{{ route('roles.store') }}" method="POST">
                     @csrf
                     <div class="mb-4">
-                        <label for="textname" class="block mb-2 text-sm font-bold text-gray-700">Name</label>
+                        <label for="textname" class="block mb-2 text-sm font-bold text-gray-700">Name <span
+                            class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                             name="name" placeholder="Enter name" value={{ old('name') }}>
@@ -24,7 +25,8 @@
                         @enderror
                     </div>
                     <div class="mb-4">
-                        <label for="textpermission" class="block mb-2 text-sm font-bold text-gray-700">Permissions</label>
+                        <label for="textpermission" class="block mb-2 text-sm font-bold text-gray-700">Permissions <span
+                            class="text-red-600">*</span></label>
                         @foreach ($permissions as $permission)
                             <span>{{ $permission->name }} </span> <input type="checkbox"
                                 class="min-w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" name="permission[]" value="{{ $permission->name }}" >   </br> 

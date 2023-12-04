@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name',50)->nullable();
+            $table->string('name',100)->nullable();
             $table->text('description')->nullable();
             $table->integer('user_id')->unsigned()->nullable();
             $table->tinyInteger('status')->comment('1 = Active, 0 = In-Active')->default(1);

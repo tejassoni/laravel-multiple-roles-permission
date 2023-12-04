@@ -26,9 +26,8 @@
                   @csrf
                   <div class="mb-4">
                       <label for="category_name"
-                          class="block mb-2 text-sm font-bold text-gray-700">Category Name<span
-                              class="text-red-500 text-danger"> *
-                          </span></label>
+                          class="block mb-2 text-sm font-bold text-gray-700">Category Name <span
+                          class="text-red-600">*</span></label>
                       <input type="text" name="name" class="form-control"
                           placeholder="Enter Category name" maxlength="50"
                           value="{{ old('name') }}" onkeypress="return isString(event)">
@@ -39,15 +38,9 @@
                   </div>
                   <div class="mb-4">
                       <label for="category_description"
-                          class="block mb-2 text-sm font-bold text-gray-700">Category Description<span
-                              class="text-red-500 text-danger"> *
-                          </span></label>
+                          class="block mb-2 text-sm font-bold text-gray-700">Category Description</label>
                       <textarea class="form-control" style="height:150px" name="description"
                           placeholder="Enter Category description">{{ old('description') }}</textarea>
-                      @error('description')
-                          <span class="text-red-500 text-danger">{{ $message }}
-                          </span>
-                      @enderror
                   </div>
                   <div>
                       <button type="submit"

@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
 
 // KEY : MULTIPERMISSION starts
 Route::group(['middleware' => ['auth']], function() {
+// Route::group(function() {
     Route::resource('roles', App\Http\Controllers\RoleController::class);
     Route::resource('users', App\Http\Controllers\UserController::class);
     Route::resource('category', App\Http\Controllers\ParentCategoryController::class);

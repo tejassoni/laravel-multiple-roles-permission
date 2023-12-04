@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sub_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name',50)->nullable();
+            $table->string('name',100)->nullable();
             $table->text('description')->nullable();
             $table->integer('parent_category_id')->unsigned()->nullable();
             $table->integer('user_id')->unsigned()->nullable();
