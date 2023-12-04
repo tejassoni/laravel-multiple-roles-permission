@@ -18,7 +18,7 @@
                             class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="name" placeholder="Enter name" value={{ old('name') }}>
+                            name="name" placeholder="Enter name" value="{{ old('name') }}" required>
                         @error('name')
                             <span class="text-red-500">{{ $message }}
                             </span>

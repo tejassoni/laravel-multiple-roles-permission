@@ -29,7 +29,7 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('category.index')" :active="request()->routeIs('category')">
+                    <x-nav-link :href="route('category.index')" :active="request()->routeIs('category.index') || request()->routeIs('category.create') || request()->routeIs('category.edit') || request()->routeIs('category.show')">
                         Parent Category
                     </x-nav-link>
                 </div>
