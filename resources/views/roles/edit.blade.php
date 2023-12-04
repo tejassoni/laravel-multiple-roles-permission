@@ -11,24 +11,32 @@
                     class="inline-flex items-center px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-black uppercase transition duration-150 ease-in-out bg-green-600 border border-transparent rounded-md hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:shadow-outline-gray disabled:opacity-25">
                     Go back
                 </a>
-                <form action="{{ route('roles.store') }}" method="POST">
+                <form action="{{ route('roles.update', $role->id) }}" method="POST">
                     @csrf
+                    @method('PUT')
                     <div class="mb-4">
-                        <label for="textname" class="block mb-2 text-sm font-bold text-gray-700">Name</label>
+                        <label for="textname" class="block mb-2 text-sm font-bold text-gray-700">Name <span
+                                class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="name" placeholder="Enter name">
+                            name="name" placeholder="Enter name" value="{{ old('name', $role->name) }}">
                         @error('name')
                             <span class="text-red-500">{{ $message }}
                             </span>
                         @enderror
                     </div>
                     <div class="mb-4">
-                        <label for="textpermission" class="block mb-2 text-sm font-bold text-gray-700">Permissions</label>
+                        <label for="textpermission" class="block mb-2 text-sm font-bold text-gray-700">Permissions <span
+                                class="text-red-600">*</span></label>
                         @foreach ($permissions as $permission)
                             <span>{{ $permission->name }} </span> <input type="checkbox"
-                                class="min-w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" name="permission[]" value="{{ $permission->name }}" >   </br> 
-                        @endforeach            
+                                class="min-w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline permission"
+                                name="permission[]" value="{{ $permission->id }}"
+                                @if (old('permission') && in_array($permission->id, old('permission'))) checked
+                            @elseif(!old('permission') && in_array($permission->id, $rolePermissions))
+                                checked @endif>
+                            </br>
+                        @endforeach
                     </div>
                     <div>
                         <button type="submit"

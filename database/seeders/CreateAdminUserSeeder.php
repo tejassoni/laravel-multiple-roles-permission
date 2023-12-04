@@ -22,7 +22,7 @@ class CreateAdminUserSeeder extends Seeder
             'password' => Hash::make('admin@123456')
         ]);             
 
-        $role = Role::findByName('Administrator');      
+        $role = Role::findByName('Administrator');              
         $grantPermissions = [
             'role-list',
             'role-show', 
@@ -41,7 +41,7 @@ class CreateAdminUserSeeder extends Seeder
             // 'order-delete'  
          ]; 
 
-        $permissions = Permission::whereIn('id',$grantPermissions)->pluck('id','id')->all();
+        $permissions = Permission::whereIn('name',$grantPermissions)->pluck('id','id')->all();        
         $role->syncPermissions($permissions);
         $user->assignRole([$role->id]);
     }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\RoleCreateRequest;
+use App\Http\Requests\RoleUpdateRequest;
 use Spatie\Permission\Models\Role; // KEY : MULTIPERMISSION
 use Spatie\Permission\Models\Permission; // KEY : MULTIPERMISSION
 
@@ -49,12 +51,8 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RoleCreateRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:roles,name',
-            'permission' => 'required',
-        ]);
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
         return redirect()->route('roles.index')
@@ -69,10 +67,10 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        $role = Role::find($id);
+        $role = Role::find($id);        
         $rolePermissions = Permission::join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
             ->where("role_has_permissions.role_id", $id)
-            ->get();
+            ->get();            
         return view('roles.show', compact('role', 'rolePermissions'));
     }
 
@@ -88,8 +86,33 @@ class RoleController extends Controller
         $permissions = Permission::get();
         $rolePermissions = Permission::join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
             ->where("role_has_permissions.role_id", $id)
-            ->get();
+            ->get()->pluck('id')->toArray();
         return view('roles.edit', compact('role', 'rolePermissions','permissions'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function update(RoleUpdateRequest $request, $id)
+    {               
+        $role = Role::find($id);                     
+        $role->syncPermissions($request->permission);
+        $role = $role->update(['name' => $request->input('name')]);
+        return redirect()->route('roles.index')
+            ->with('success', 'Role updated successfully');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Role $role)
+    {        
+        $role->delete();
+        return redirect()->route('roles.index')
+            ->withSuccess('Deleted Successfully.');
     }
 
 

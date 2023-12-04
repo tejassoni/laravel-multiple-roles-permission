@@ -19,7 +19,7 @@
                                 class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="name" placeholder="Enter name" value="{{ $user->name }}" required>
+                            name="name" placeholder="Enter name" value="{{ old('name',$user->name) }}" required>
                         @error('name')
                             <span class="text-red-500">{{ $message }}
                             </span>
@@ -30,7 +30,7 @@
                                 class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="email" placeholder="Enter email" value="{{ $user->email }}">
+                            name="email" placeholder="Enter email" value="{{ old('email',$user->email) }}">
                         @error('email')
                             <span class="text-red-500">{{ $message }}
                             </span>

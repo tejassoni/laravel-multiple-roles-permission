@@ -17,9 +17,9 @@ class CreateMemberUserSeeder extends Seeder
     public function run(): void
     {
         $user = User::create([
-            'name' => 'Admin user', 
-            'email' => 'admin@yopmail.com',
-            'password' => Hash::make('admin@123456')
+            'name' => 'Member user', 
+            'email' => 'member@yopmail.com',
+            'password' => Hash::make('member@123456')
         ]);             
 
         $role = Role::findByName('Member');      
@@ -38,7 +38,7 @@ class CreateMemberUserSeeder extends Seeder
             // 'order-delete'  
          ]; 
 
-        $permissions = Permission::whereIn('id',$grantPermissions)->pluck('id','id')->all();
+        $permissions = Permission::whereIn('name',$grantPermissions)->pluck('id','id')->all();
         $role->syncPermissions($permissions);
         $user->assignRole([$role->id]);
     }
