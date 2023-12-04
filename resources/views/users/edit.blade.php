@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Create - User') }}
+            {{ __('Edit - User') }}
         </h2>
     </x-slot>
     <div class="py-12">
@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="textrole" class="block mb-2 text-sm font-bold text-gray-700">Select Role <span
+                        <label for="textrole" class="block mb-2 text-sm font-bold text-gray-700">Select Roles <span
                                 class="text-red-600">*</span></label>
                         <select name="roles[]" id="roles[]"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" multiple>

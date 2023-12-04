@@ -14,30 +14,33 @@
                 <form action="{{ route('users.store') }}" method="POST">
                     @csrf
                     <div class="mb-4">
-                        <label for="textname" class="block mb-2 text-sm font-bold text-gray-700">Name</label>
+                        <label for="textname" class="block mb-2 text-sm font-bold text-gray-700">Name <span
+                            class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="name" placeholder="Enter name">
+                            name="name" placeholder="Enter name" required>
                         @error('name')
                             <span class="text-red-500">{{ $message }}
                             </span>
                         @enderror
                     </div>
                     <div class="mb-4">
-                        <label for="textemail" class="block mb-2 text-sm font-bold text-gray-700">Email</label>
+                        <label for="textemail" class="block mb-2 text-sm font-bold text-gray-700">Email <span
+                            class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="email" placeholder="Enter email">
+                            name="email" placeholder="Enter email" required>
                         @error('email')
                             <span class="text-red-500">{{ $message }}
                             </span>
                         @enderror
                     </div>
                     <div class="mb-4">
-                        <label for="textpassword" class="block mb-2 text-sm font-bold text-gray-700">Password</label>
+                        <label for="textpassword" class="block mb-2 text-sm font-bold text-gray-700">Password <span
+                            class="text-red-600">*</span></label>
                         <input type="password"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="password" placeholder="Enter Password">
+                            name="password" placeholder="Enter Password" required>
                         @error('password')
                             <span class="text-red-500">{{ $message }}
                             </span>
@@ -45,10 +48,11 @@
                     </div>
                     <div class="mb-4">
                         <label for="textconfirmpassword" class="block mb-2 text-sm font-bold text-gray-700">Confirm
-                            Password</label>
+                            Password <span
+                            class="text-red-600">*</span></label>
                         <input type="password"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="password_confirmation" placeholder="Enter Confirm Password">
+                            name="password_confirmation" placeholder="Enter Confirm Password" required>
                         @error('password_confirmation')
                             <span class="text-red-500">{{ $message }}
                             </span>
@@ -56,13 +60,18 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="textrole" class="block mb-2 text-sm font-bold text-gray-700">Select Role</label>
-                        <select name="roles" id="roles" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" multiple>
-                            <option selected>Choose a role</option>
-                            
-                            <option value="US">United States</option>
-                          </select>  
-                        @error('email')
+                        <label for="textrole" class="block mb-2 text-sm font-bold text-gray-700">Select Roles <span
+                            class="text-red-600">*</span></label>
+                        <select name="roles[]" id="roles[]"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            multiple required>
+                            <option disabled readonly>Choose a role</option>
+                            @foreach ($roles as $role)
+                                <option value="{{ $role->name }}" @if (old('roles') && in_array($role->name, old('roles'))) selected @endif>
+                                    {{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('roles')
                             <span class="text-red-500">{{ $message }}
                             </span>
                         @enderror

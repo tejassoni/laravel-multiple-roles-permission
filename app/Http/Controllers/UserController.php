@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use Spatie\Permission\Models\Role; // KEY : MULTIPERMISSION
 use Spatie\Permission\Models\Permission; // KEY : MULTIPERMISSION
@@ -25,16 +27,25 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $roles = Role::all();
+        return view('users.create', compact('roles'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserCreateRequest $request)
     {
-        //
-        dd('store calls');
+        try {
+            $roleIds = Role::whereIn('name', $request->roles)->pluck('id')->toArray();
+            $user = User::create(['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password)]);
+            $user->assignRole($roleIds); // new roles assigned to user  
+            return redirect()->route('users.index')
+                ->withSuccess('Created Successfully...!');
+        } catch (\Exception $ex) {
+            return redirect()->route('users.create')
+                ->withError('Fail to update...!, ' . $ex->getMessage());
+        }
     }
 
     /**
