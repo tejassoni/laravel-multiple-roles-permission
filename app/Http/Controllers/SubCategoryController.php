@@ -16,7 +16,7 @@ class SubCategoryController extends Controller
     public function index()
     {
         return response()->view('subcategory.index', [
-            'categories' => SubCategory::with(['getCatUserHasOne', 'getParentCatHasOne'])->where('user_id', auth()->user()->id)->orderBy('updated_at', 'desc')->get(),
+            'subcategories' => SubCategory::with(['getCatUserHasOne', 'getParentCatHasOne'])->where('user_id', auth()->user()->id)->orderBy('updated_at', 'desc')->get(),
         ]);
     }
 
@@ -25,7 +25,8 @@ class SubCategoryController extends Controller
      */
     public function create()
     {
-        $parent_category = Category::where('user_id', auth()->user()->id)->where('status', 1)->get();
+        $parent_category = Category::where('status', 1)
+        ->get();
         return view('subcategory.create', \compact('parent_category'));
     }
 

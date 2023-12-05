@@ -29,7 +29,7 @@
                           class="block mb-2 text-sm font-bold text-gray-700">Category Name <span
                           class="text-red-600">*</span></label>
                       <input type="text" name="name" class="form-control"
-                          placeholder="Enter Category name" maxlength="50"
+                          placeholder="Enter Category name" maxlength="100"
                           value="{{ old('name') }}" onkeypress="return isString(event)">
                       @error('name')
                           <span class="text-red-500 text-danger">{{ $message }}
