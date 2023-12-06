@@ -35,8 +35,10 @@
                     <thead>
                         <tr class="bg-gray-100">
                             <th class="px-4 py-2 border">Name</th>
-                            <th class="px-4 py-2 border">Email</th>
-                            <th class="px-4 py-2 border">Roles</th>
+                            <th class="px-4 py-2 border">Category</th>
+                            <th class="px-4 py-2 border">Image</th>
+                            <th class="px-4 py-2 border">Price</th>
+                            <th class="px-4 py-2 border">Quantity</th>
                             <th class="px-4 py-2 border">Action</th>
                         </tr>
                     </thead>
@@ -44,8 +46,11 @@
                         @foreach ($products as $product)
                             <tr>
                                 <td class="px-4 py-2 border">{{ $product->name }}</td>
-                                <td class="px-4 py-2 border">{{ $product->name }}</td>
-                                <td class="px-4 py-2 border">{{ $product->name }}</td>
+                                <td class="px-4 py-2 border">{{ $product->getParentCategoryHasOne->name ?? "" }}</td>
+
+                                <td class="px-4 py-2 border"><img src="{{ asset('storage/products/'.$product->image) }}" heigth="150" width="150" /></td>
+                                <td class="px-4 py-2 border">{{ $product->price }}</td>
+                                <td class="px-4 py-2 border">{{ $product->qty }}</td>
                                 <td class="px-4 py-2 border">
                                         <form action="{{ route('products.destroy', $product->id) }}" method="POST">
                                             <a title="show" href="{{ route('products.show', $product->id) }}"

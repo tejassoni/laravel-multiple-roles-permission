@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -45,6 +46,11 @@ class Product extends Model
     public function getCatUserHasOne()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function getParentCategoryHasOne()
+    {
+    return $this->hasOne(Category::class, 'id', 'parent_category_id');
     }
 
     
