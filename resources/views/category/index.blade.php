@@ -22,20 +22,20 @@
                           </div>
                       </div>
                   @endif
-                  <table id="category_tbl" class="display" style="width:100%">
+                  <table id="category_tbl" class="w-full table-fixed" style="width:100%">
                       <thead>
-                          <tr>
-                              <th>Name</th>
-                              <th>Description</th>
-                              <th>Action</th>
+                          <tr class="bg-gray-100">
+                              <th class="px-4 py-2 border">Name</th>
+                              <th class="px-4 py-2 border">Description</th>
+                              <th class="px-4 py-2 border">Action</th>
                           </tr>
                       </thead>
                       <tbody>
                           @foreach ($categories as $category)
                               <tr>
-                                  <td>{{ $category->name }}</td>
-                                  <td>{{ $category->description }}</td>
-                                  <td>
+                                  <td class="px-4 py-2 border">{{ $category->name }}</td>
+                                  <td class="px-4 py-2 border">{{ $category->description }}</td>
+                                  <td class="px-4 py-2 border">
                                       <form action="{{ route('category.destroy', $category->id) }}" method="POST">
                                           <a title="show" class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-500 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25"
                                               href="{{ route('category.show', $category->id) }}">Show</a>

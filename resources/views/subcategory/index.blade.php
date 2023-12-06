@@ -22,39 +22,33 @@
                             </div>
                         </div>
                     @endif
-                    <table id="sub-category-tbl" class="display" style="width:100%">
+                    <table id="sub-category-tbl" class="w-full table-fixed" style="width:100%">
                         <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Parent-category</th>
-                                <th>Created-by</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                            <tr class="bg-gray-100">
+                                <th class="px-4 py-2 border">Name</th>
+                                <th class="px-4 py-2 border">Description</th>
+                                <th class="px-4 py-2 border">Parent-category</th>
+                                <th class="px-4 py-2 border">Created-by</th>
+                                <th class="px-4 py-2 border">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($subcategories as $subCat)
                                 <tr>
-                                    <td>{{ $subCat->name }}</td>
-                                    <td>{{ $subCat->description }}</td>
-                                    <td>{{ $subCat->getParentCatHasOne->name ?? 'None' }}</td>
-                                    <td>{{ $subCat->getCatUserHasOne->name ?? 'None' }}</td>
-                                    <td> <label class="switch" title="change status">
-                                        <input id="<?= $subCat->id ?>" class="changeStatus" type="checkbox"
-                                            <?= ($subCat->status == 1) ? 'checked' : ''; ?> value="{{ $subCat->status }}">
-                                        <span class="slider round"></span>
-                                    </label></td>
-                                    <td>
+                                    <td class="px-4 py-2 border">{{ $subCat->name }}</td>
+                                    <td class="px-4 py-2 border">{{ $subCat->description }}</td>
+                                    <td class="px-4 py-2 border">{{ $subCat->getParentCatHasOne->name ?? 'None' }}</td>
+                                    <td class="px-4 py-2 border">{{ $subCat->getCatUserHasOne->name ?? 'None' }}</td>
+                                    <td class="px-4 py-2 border">
                                         <form action="{{ route('subcategory.destroy', $subCat->id) }}" method="POST">
-                                            <a class="btn btn-info btn-sm"
-                                                href="{{ route('subcategory.show', $subCat->id) }}">{{ __('messages.show') }}</a>
-                                            <a class="btn btn-primary btn-sm"
-                                                href="{{ route('subcategory.edit', $subCat->id) }}">{{ __('messages.edit') }}</a>
+                                            <a class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-500 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25"
+                                                href="{{ route('subcategory.show', $subCat->id) }}">{{ __('Show') }}</a>
+                                            <a class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-800 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25"
+                                                href="{{ route('subcategory.edit', $subCat->id) }}">{{ __('Edit') }}</a>
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit"
-                                                class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this ?');">{{ __('messages.delete') }}</button>
+                                            <button title="delete" type="submit"
+                                                class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-red-600 border border-transparent rounded-md hover:bg-red-500 active:bg-red-700 focus:outline-none focus:border-red-700 focus:shadow-outline-gray disabled:opacity-25" onclick="return confirm('Are you sure you want to delete this ?');">{{ __('Delete') }}</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -65,27 +59,4 @@
             </div>
         </div>
     </div>
-    @push('footer-scripts')
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('#sub-category-tbl').DataTable();
-                // Status update
-                $('.changeStatus').on('change', function(){
-                     $.ajax({
-                        type: 'POST',
-                        url: "{{ url('subcategory/statusupdate') }}",
-                        data: {"_token": "{{ csrf_token() }}",status:$(this).val(),id:$(this).attr('data-id')},
-                        dataType: 'json', 
-                        success: function(data_resp, textStatus, jqXHR) { // On ajax success operation
-                            if(data_resp.status){
-                                alert(data_resp.message);
-                            }
-                        },error: function (jqXHR, textStatus, errorThrown) { // On ajax error operation 
-                           alert(textStatus, errorThrown);        
-                        }
-                        });
-                });
-            });
-        </script>
-    @endpush
 </x-app-layout>

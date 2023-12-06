@@ -34,7 +34,7 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('subcategory.index')" :active="request()->routeIs('subcategory')">
+                    <x-nav-link :href="route('subcategory.index')" :active="request()->routeIs('subcategory.index') || request()->routeIs('subcategory.create') || request()->routeIs('subcategory.edit') || request()->routeIs('subcategory.show')">
                         SubCategory
                     </x-nav-link>
                 </div>

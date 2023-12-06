@@ -40,7 +40,7 @@
                   <div class="mb-4">
                       <label for="category_description"
                           class="block mb-2 text-sm font-bold text-gray-700">{{ __('Category Description') }}</label>
-                      <textarea class="form-control" style="height:150px" name="description"
+                      <textarea class="form-control" cols="40" rows="7" name="description"
                           placeholder="{{ __('Enter Category description') }}">{{ old('description',$category->description) }}</textarea>
                   </div>
                   <div>
