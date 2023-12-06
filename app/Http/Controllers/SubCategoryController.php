@@ -11,6 +11,21 @@ use App\Http\Requests\SubCategoryUpdateRequest;
 
 class SubCategoryController extends Controller
 {
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function __construct()
+    {
+        $this->middleware('permission:subcategory-list|subcategory-create|subcategory-edit|subcategory-delete', ['only' => ['index', 'store']]);
+        $this->middleware('permission:subcategory-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:subcategory-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:subcategory-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:subcategory-show', ['only' => ['show']]);
+    }
+
     /**
      * Display a listing of the resource.
      */
