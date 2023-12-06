@@ -38,14 +38,9 @@
                     </div>
                     <div class="mb-4">
                         <label for="description"
-                            class="block mb-2 text-sm font-bold text-gray-700">{{ __('Sub Category Description') }} <span
-                            class="text-red-600">*</span></label>
+                            class="block mb-2 text-sm font-bold text-gray-700">{{ __('Sub Category Description') }} </label>
                         <textarea class="form-control" cols="40" rows="7" name="description"
-                            placeholder="{{ __('Enter Sub category description') }}" required>{{ old('description') }}</textarea>
-                        @error('description')
-                            <span class="text-red-500 text-danger">{{ $message }}
-                            </span>
-                        @enderror
+                            placeholder="{{ __('Enter Sub category description') }}">{{ old('description') }}</textarea>
                     </div>
                     <div class="mb-4">
                         <label for="parentcategory_name"

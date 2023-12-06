@@ -47,7 +47,6 @@
                                 <td class="px-4 py-2 border">{{ $product->name }}</td>
                                 <td class="px-4 py-2 border">{{ $product->name }}</td>
                                 <td class="px-4 py-2 border">
-                                    @if (auth()->user()->id != $product->id)
                                         <form action="{{ route('products.destroy', $product->id) }}" method="POST">
                                             <a title="show" href="{{ route('products.show', $product->id) }}"
                                                 class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-500 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25">
@@ -64,7 +63,6 @@
                                                 Delete
                                             </button>
                                         </form>
-                                    @endif
                                 </td>
                             </tr>
                         @endforeach

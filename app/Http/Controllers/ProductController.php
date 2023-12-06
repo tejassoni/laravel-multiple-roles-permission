@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductStoreRequest;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\SubCategory;
@@ -32,9 +33,19 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
+        $created = Product::create(['name' => $request->name, 'description' => $request->description, 'user_id' => auth()->user()->id]);
+
+        if ($created) { // inserted success
+            return redirect()->route('products.index')
+                ->withSuccess('Created successfully...!');
+        }
+
+        return redirect()
+            ->back()
+            ->withInput()
+            ->with('error', 'fails not created..!');
     }
 
     /**

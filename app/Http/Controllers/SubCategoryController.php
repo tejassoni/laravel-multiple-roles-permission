@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
-use App\Http\Requests\SubCategoryCreateRequest;
-use App\Models\Category;
+use App\Http\Requests\SubCategoryStoreRequest;
+use App\Http\Requests\SubCategoryUpdateRequest;
 
 class SubCategoryController extends Controller
 {
@@ -33,7 +34,7 @@ class SubCategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(SubCategoryCreateRequest $request)
+    public function store(SubCategoryStoreRequest $request)
     {
         $created = SubCategory::create(['name' => $request->name, 'description' => $request->description, 'parent_category_id' => $request->select_parent_cat, 'user_id' => auth()->user()->id]);
 
@@ -70,7 +71,7 @@ class SubCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SubCategoryCreateRequest $request, SubCategory $subcategory)
+    public function update(SubCategoryUpdateRequest $request, SubCategory $subcategory)
     {
         $subcategory->update(['name' => $request->name, 'description' => $request->description, 'parent_category_id' => $request->select_parent_cat, 'user_id' => auth()->user()->id]);
 

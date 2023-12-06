@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests\RoleCreateRequest;
+use App\Http\Requests\RoleStoreRequest;
 use App\Http\Requests\RoleUpdateRequest;
 use Spatie\Permission\Models\Role; // KEY : MULTIPERMISSION
 use Spatie\Permission\Models\Permission; // KEY : MULTIPERMISSION
@@ -51,7 +50,7 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(RoleCreateRequest $request)
+    public function store(RoleStoreRequest $request)
     {
         $role = Role::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));

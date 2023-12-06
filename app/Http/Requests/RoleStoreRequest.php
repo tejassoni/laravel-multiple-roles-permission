@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CategoryCreateRequest extends FormRequest
+class RoleStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,9 +20,11 @@ class CategoryCreateRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
+    {      
         return [
-            'name' => 'required|string|max:100|unique:categories,name',
+            'name' => 'required|string|max:100|unique:roles,name',
+            'permission' => 'required|array',
+            'permission.*' => 'required',
         ];
     }
 }

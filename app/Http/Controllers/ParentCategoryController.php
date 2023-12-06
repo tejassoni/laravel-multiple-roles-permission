@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use Illuminate\Http\Request;
-use App\Http\Requests\CategoryCreateRequest;
+use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 
 class ParentCategoryController extends Controller
@@ -43,7 +42,7 @@ class ParentCategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CategoryCreateRequest $request)
+    public function store(CategoryStoreRequest $request)
     {
         $created = Category::create(['name' => $request->name, 'description' => $request->description, 'user_id' => auth()->user()->id]);
 
