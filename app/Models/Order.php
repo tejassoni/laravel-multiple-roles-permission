@@ -23,7 +23,7 @@ class Order extends Model
      *
      * @var array
      */
-    protected $fillable = ['`order_id`', '`total_amount`', 'user_id'];
+    protected $fillable = ['order_code', 'total_amount', 'user_id'];
 
     /**
      * The attributes that aren't mass assignable.
@@ -35,23 +35,29 @@ class Order extends Model
     /**
      * Sub category to Parent category relationship with hasOne
      */
-    public function getParentCatHasOne()
+    public function getOrdersProductsHasMany()
     {
-        return $this->hasOne(Category::class, 'id', 'parent_category_id');
+        return $this->hasMany(OrderProductPivot::class, 'order_id', 'id');
     }
 
     /**
-     * Sub category to User relationship with hasOne
+     * Sub category to Parent category relationship with hasOne
      */
-    public function getCatUserHasOne()
+    public function getOrdersProductsHasManyThrough()
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        // use Illuminate\Support\Facades\DB;
+        
+        
+        return $this->hasManyThrough(Product::class,OrderProductPivot::class,'order_id','id','product_id','product_id');
+       
     }
 
-    public function getParentCategoryHasOne()
-    {
-    return $this->hasOne(Category::class, 'id', 'parent_category_id');
-    }
+    public function meta()
+{
+  return $this->belongsToMany( Product::class,OrderProductPivot::class, 'order_id', 'product_id');
+        //->withPivot([ ARRAY OF FIELDS YOU NEED FROM meta TABLE ]);
+}
 
+    
     
 }

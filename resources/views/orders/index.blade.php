@@ -34,23 +34,24 @@
                 <table class="w-full table-fixed">
                     <thead>
                         <tr class="bg-gray-100">
-                            <th class="px-4 py-2 border">Name</th>
-                            <th class="px-4 py-2 border">Category</th>
-                            <th class="px-4 py-2 border">Image</th>
-                            <th class="px-4 py-2 border">Price</th>
-                            <th class="px-4 py-2 border">Quantity</th>
+                            <th class="px-4 py-2 border">Order Code</th>
+                            <th class="px-4 py-2 border">Products</th>
+                            <th class="px-4 py-2 border">Total Amount</th>
                             <th class="px-4 py-2 border">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody>                        
                         @foreach ($orders as $order)
                             <tr>
+                                <td class="px-4 py-2 border">{{ $order->order_code }}</td>
+                                <td class="px-4 py-2 border">@if($order->has('getOrdersProductsHasManyThrough'))
+                                @foreach ($order->getOrdersProductsHasManyThrough as $orderProds)
+                                {{ dump($orderProds) }}
+                                    <span>{{ $orderProds->name }} ,</span>
+                                @endforeach
+                                @endif
+                                </td>
                                 <td class="px-4 py-2 border">{{ $order->name }}</td>
-                                <td class="px-4 py-2 border">{{ $order->getParentCategoryHasOne->name ?? "" }}</td>
-
-                                <td class="px-4 py-2 border"><img src="{{ asset('storage/products/'.$order->image) }}" heigth="150" width="150" /></td>
-                                <td class="px-4 py-2 border">{{ $order->price }}</td>
-                                <td class="px-4 py-2 border">{{ $order->qty }}</td>
                                 <td class="px-4 py-2 border">
                                         <form action="{{ route('orders.destroy', $order->id) }}" method="POST">
                                             <a title="show" href="{{ route('orders.show', $order->id) }}"

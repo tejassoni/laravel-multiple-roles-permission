@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use App\Models\OrderProductPivot;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\OrderStoreRequest;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 
@@ -31,9 +34,14 @@ class OrderController extends Controller {
      * Display a listing of the resource.
      */
     public function index() {
+        DB::enableQueryLog();
+        Order::with(['meta'])
+        //->where('id',3)
+        ->where('user_id',auth()->user()->id)->orderBy('updated_at', 'desc')->get();
+        dd(\DB::getQueryLog());
         return response()->view('orders.index', [
             'products' => Product::with(['getParentCategoryHasOne'])->orderBy('updated_at', 'desc')->get(),
-            'orders' => Order::orderBy('updated_at', 'desc')->get()
+            'orders' => Order::with(['getOrdersProductsHasMany','getOrdersProductsHasManyThrough'])->where('user_id',auth()->user()->id)->orderBy('updated_at', 'desc')->get()
         ]);
     }
 
@@ -41,23 +49,22 @@ class OrderController extends Controller {
      * Show the form for creating a new resource.
      */
     public function create() {
-        $parent_category = Category::where('status', Category::STATUS_ACTIVE)->get();
-        $subCategories = SubCategory::where('status', Category::STATUS_ACTIVE)->get();
-        return view('orders.create', compact('parent_category', 'subCategories'));
+        $products = Product::with(['getParentCatHasOne'])->where('status', Product::STATUS_ACTIVE)->get();
+        return view('orders.create', compact('products'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductStoreRequest $request) {
-        $fileName = null;
-        if($request->hasFile('image')) {
-            $filehandle = $this->_singleFileUploads($request, 'image', 'public/products');            
-            $fileName = $filehandle['data']['name'];
-        }
-        $created = Product::create(['name' => $request->name, 'description' => $request->description,'image' => $fileName, 'parent_category_id' => $request->select_parent_cat, 'price' => $request->price, 'qty' => $request->qty, 'user_id' => auth()->user()->id]);
+    public function store(OrderStoreRequest $request) {        
+        $createdOrder = Order::create(['order_code' => $request->order_code, 'total_amount' => $request->total_amount,'user_id' => auth()->user()->id]);
 
-        if($created) { // inserted success
+        // selected multiple should insert into order products pivot table
+        foreach($request->products as $prodVal ) {             
+            OrderProductPivot::create(['order_id' => $createdOrder->id, 'product_id' => $prodVal]);
+        } // Loops Ends
+
+        if($createdOrder) { // inserted success
             return redirect()->route('orders.index')
                 ->withSuccess('Created successfully...!');
         }

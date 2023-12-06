@@ -14,30 +14,29 @@
                 <form action="{{ route('orders.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-4">
-                        <label for="name" class="block mb-2 text-sm font-bold text-gray-700">Order ID <span
+                        <label for="name" class="block mb-2 text-sm font-bold text-gray-700">Order Code <span
                             class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="order_id" placeholder="Enter Order ID" value="{{ old('order_id') }}" maxlength="10" required>
-                        @error('order_id')
+                            name="order_code" placeholder="Enter Order Code" value="{{ old('order_code') }}" maxlength="10" required>
+                        @error('order_code')
                             <span class="text-red-500">{{ $message }}
                             </span>
                         @enderror
                     </div>
 
                     <div class="mb-4">
-                        <label for="textrole" class="block mb-2 text-sm font-bold text-gray-700">Select Roles <span
+                        <label for="textrole" class="block mb-2 text-sm font-bold text-gray-700">Select Products <span
                             class="text-red-600">*</span></label>
-                        <select name="roles[]" id="roles[]"
+                        <select name="products[]" id="products[]"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             multiple required>
-                            <option disabled readonly>Choose a role</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->name }}" @if (old('roles') && in_array($role->name, old('roles'))) selected @endif>
-                                    {{ $role->name }}</option>
+                            <option disabled readonly>Choose a Products</option>
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}" @if (old('products') && in_array($product->id, old('products'))) selected @endif>{{ $product->name }}</option>
                             @endforeach
                         </select>
-                        @error('roles')
+                        @error('products')
                             <span class="text-red-500">{{ $message }}
                             </span>
                         @enderror

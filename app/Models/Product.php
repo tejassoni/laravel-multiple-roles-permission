@@ -31,6 +31,9 @@ class Product extends Model
      * @var array
      */
     protected $guarded = ['created_at','updated_at'];
+
+    const STATUS_ACTIVE = 1;
+    const STATUS_INACTIVE = 0;
     
     /**
      * Sub category to Parent category relationship with hasOne
