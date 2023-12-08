@@ -42,16 +42,19 @@
                     </thead>
                     <tbody>                        
                         @foreach ($orders as $order)
+                            @php $total_amount = 0; @endphp
                             <tr>
                                 <td class="px-4 py-2 border">{{ $order->order_code }}</td>
-                                <td class="px-4 py-2 border">@if($order->has('getOrdersProductsHasManyThrough'))
-                                @foreach ($order->getOrdersProductsHasManyThrough as $orderProds)
-                                {{ dump($orderProds) }}
+                                <td class="px-4 py-2 border">@if($order->has('products'))
+                                @foreach ($order->products as $orderProds)
+                                    @php
+                                        $total_amount = $total_amount + $orderProds->price; 
+                                    @endphp
                                     <span>{{ $orderProds->name }} ,</span>
                                 @endforeach
                                 @endif
                                 </td>
-                                <td class="px-4 py-2 border">{{ $order->name }}</td>
+                                <td class="px-4 py-2 border">{{ $total_amount }}</td>
                                 <td class="px-4 py-2 border">
                                         <form action="{{ route('orders.destroy', $order->id) }}" method="POST">
                                             <a title="show" href="{{ route('orders.show', $order->id) }}"

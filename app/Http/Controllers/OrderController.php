@@ -34,14 +34,10 @@ class OrderController extends Controller {
      * Display a listing of the resource.
      */
     public function index() {
-        DB::enableQueryLog();
-        Order::with(['meta'])
-        //->where('id',3)
-        ->where('user_id',auth()->user()->id)->orderBy('updated_at', 'desc')->get();
-        dd(\DB::getQueryLog());
         return response()->view('orders.index', [
             'products' => Product::with(['getParentCategoryHasOne'])->orderBy('updated_at', 'desc')->get(),
-            'orders' => Order::with(['getOrdersProductsHasMany','getOrdersProductsHasManyThrough'])->where('user_id',auth()->user()->id)->orderBy('updated_at', 'desc')->get()
+            'orders' => Order::with(['products'])
+            ->where('user_id',auth()->user()->id)->orderBy('updated_at', 'desc')->get()
         ]);
     }
 
@@ -57,10 +53,10 @@ class OrderController extends Controller {
      * Store a newly created resource in storage.
      */
     public function store(OrderStoreRequest $request) {        
-        $createdOrder = Order::create(['order_code' => $request->order_code, 'total_amount' => $request->total_amount,'user_id' => auth()->user()->id]);
+        $createdOrder = Order::create(['order_code' => $request->order_code,'user_id' => auth()->user()->id]);
 
         // selected multiple should insert into order products pivot table
-        foreach($request->products as $prodVal ) {             
+        foreach($request->products as $prodVal ) {              
             OrderProductPivot::create(['order_id' => $createdOrder->id, 'product_id' => $prodVal]);
         } // Loops Ends
 
@@ -88,11 +84,17 @@ class OrderController extends Controller {
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product) {
-        $order->with('getParentCatHasOne')->where('user_id', auth()->user()->id);
-        $parent_category = Category::where('status', Category::STATUS_ACTIVE)->get();
-        $subCategories = SubCategory::where('status', Category::STATUS_ACTIVE)->get();
-        return view('orders.edit', compact('product', 'parent_category'));
+    public function edit(Order $order) {
+        $selectedProducts = [];
+        $orderId = $order->id;
+        $order->with('products')->where('user_id', auth()->user()->id);
+        if($order->has('products')){
+            $order->products->each(function($prod,$key) use(&$selectedProducts){
+                $selectedProducts[] =$prod->id;
+            });
+        }        
+        $products = Product::with(['getParentCatHasOne'])->where('status', Product::STATUS_ACTIVE)->get();
+        return view('orders.edit', compact('order','products','selectedProducts'));
     }
 
     /**
@@ -116,10 +118,10 @@ class OrderController extends Controller {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(Order $order)
     {
+        OrderProductPivot::where('order_id', $order->id)->delete();
         $order->delete();
-
         return redirect()->route('orders.index')
             ->withSuccess('Deleted Successfully.');
     }

@@ -11,81 +11,36 @@
                     class="inline-flex items-center px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-black uppercase transition duration-150 ease-in-out bg-green-600 border border-transparent rounded-md hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:shadow-outline-gray disabled:opacity-25">
                     Go back
                 </a>
-                <form action="{{ route('orders.update', $order->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('orders.update',$order->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="mb-4">
-                        <label for="name" class="block mb-2 text-sm font-bold text-gray-700">Order Name <span
-                                class="text-red-600">*</span></label>
+                        <label for="name" class="block mb-2 text-sm font-bold text-gray-700">Order Code <span
+                            class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="name" placeholder="Enter Order name" value="{{ old('name', $order->name) }}"
-                            required>
-                        @error('name')
+                            name="order_code" placeholder="Enter Order Code" value="{{ old('order_code',$order->order_code) }}" maxlength="10" required>
+                        @error('order_code')
                             <span class="text-red-500">{{ $message }}
                             </span>
                         @enderror
                     </div>
 
                     <div class="mb-4">
-                        <label for="description"
-                            class="block mb-2 text-sm font-bold text-gray-700">{{ __('Description') }} </label>
-                        <textarea class="form-control" cols="40" rows="7" name="description"
-                            placeholder="{{ __('Enter Order description') }}">{{ old('description', $order->description) }}</textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="image" class="block mb-2 text-sm font-bold text-gray-700">Image </label>
-                        <input type="file"
-                            class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="image" accept=".jpg, .png, .jpeg">
-                        @error('image')
-                            <span class="text-red-500">{{ $message }}
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="parentcategory_name"
-                            class="block mb-2 text-sm font-bold text-gray-700">{{ __('Parent category') }} <span
-                                class="text-red-600">*</span></label>
-                        <select class="form-select" name="select_parent_cat" id="select_parent_cat" required>
-                            <option selected readonly disabled>{{ __('Select Parent category') . '--' }}</option>
-                            @foreach ($parent_category as $parent_cat)
-                                <option value="{{ $parent_cat->id }}"
-                                    @if (old('select_parent_cat') && $parent_cat->id == old('select_parent_cat')) selected
-                        @elseif(!old('select_parent_cat') && $parent_cat->id == $order->parent_category_id)
-                        selected @endif>
-                                    {{ $parent_cat->name }}</option>
+                        <label for="textrole" class="block mb-2 text-sm font-bold text-gray-700">Select Products <span
+                            class="text-red-600">*</span></label>
+                        <select name="products[]" id="products[]"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            multiple required>
+                            <option disabled readonly>Choose a Products</option>
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}" @if (old('products') && in_array($product->id, old('products'))) selected 
+                                @elseif(!old('products') && in_array($product->id, $selectedProducts))
+                                selected     
+                                @endif>{{ $product->name }}</option>
                             @endforeach
                         </select>
-                        @error('select_parent_cat')
-                            <span class="text-red-500 text-danger">{{ $message }}
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="price" class="block mb-2 text-sm font-bold text-gray-700">Price <span
-                                class="text-red-600">*</span></label>
-                        <input type="text"
-                            class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="price" min="1" maxlength="10" placeholder="Enter Order price"
-                            value="{{ old('price', $order->price) }}" required>
-                        @error('price')
-                            <span class="text-red-500">{{ $message }}
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="qty" class="block mb-2 text-sm font-bold text-gray-700">Quantity <span
-                                class="text-red-600">*</span></label>
-                        <input type="number"
-                            class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline numberonly"
-                            name="qty" min="0" placeholder="Enter Order Quantity"
-                            value="{{ old('qty', $order->qty) }}" required>
-                        @error('qty')
+                        @error('products')
                             <span class="text-red-500">{{ $message }}
                             </span>
                         @enderror

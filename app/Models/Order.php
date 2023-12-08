@@ -52,11 +52,11 @@ class Order extends Model
        
     }
 
-    public function meta()
-{
-  return $this->belongsToMany( Product::class,OrderProductPivot::class, 'order_id', 'product_id');
-        //->withPivot([ ARRAY OF FIELDS YOU NEED FROM meta TABLE ]);
-}
+    public function products()
+    {
+      return $this->belongsToMany( Product::class,OrderProductPivot::class, 'order_id', 'product_id');
+            //->withPivot([ ARRAY OF FIELDS YOU NEED FROM meta TABLE ]);
+    }
 
     
     
