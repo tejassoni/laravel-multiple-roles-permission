@@ -37,7 +37,7 @@
                             class="text-red-600">*</span></label>
                         <input type="file"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="image" accept=".jpg, .png, .jpeg" required>
+                            name="image" accept=".jpg, .png, .jpeg, .gif" required>
                         @error('image')
                             <span class="text-red-500">{{ $message }}
                             </span>
@@ -65,7 +65,7 @@
                             class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="price" min="1" maxlength="10" placeholder="Enter Product price" value="{{ old('price') }}" required>
+                            name="price" min="1" maxlength="13" placeholder="Enter Product price" value="{{ old('price') }}" required>
                         @error('price')
                             <span class="text-red-500">{{ $message }}
                             </span>
@@ -77,7 +77,7 @@
                             class="text-red-600">*</span></label>
                         <input type="number"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline numberonly"
-                            name="qty" min="0" placeholder="Enter Product Quantity" value="{{ old('qty') }}" required>
+                            name="qty" min="1" max="4294967295" placeholder="Enter Product Quantity" value="{{ old('qty') }}" required>
                         @error('qty')
                             <span class="text-red-500">{{ $message }}
                             </span>

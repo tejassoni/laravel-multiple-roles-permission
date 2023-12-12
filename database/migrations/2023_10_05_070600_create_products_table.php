@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('parent_category_id')->unsigned()->nullable();
             $table->integer('sub_category_id')->unsigned()->nullable();
             $table->string('image')->nullable();
-            $table->double('price',10,2)->nullable();
+            $table->double('price',12,2)->nullable();
             $table->integer('qty')->unsigned()->nullable();
             $table->tinyInteger('status')->comment('1 = Active, 0 = In-Active')->nullable()->default(1);
             $table->integer('user_id')->unsigned()->nullable();

@@ -36,9 +36,10 @@
 
                     <div class="mb-4">
                         <label for="image" class="block mb-2 text-sm font-bold text-gray-700">Image </label>
+                        <img src="{{ asset('storage/products/' . $product->image) }}" heigth="100" width="100" />
                         <input type="file"
-                            class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="image" accept=".jpg, .png, .jpeg">
+                            class="w-50 px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                            name="image" accept=".jpg, .png, .jpeg, .gif">
                         @error('image')
                             <span class="text-red-500">{{ $message }}
                             </span>
@@ -50,12 +51,14 @@
                             class="block mb-2 text-sm font-bold text-gray-700">{{ __('Parent category') }} <span
                                 class="text-red-600">*</span></label>
                         <select class="form-select" name="select_parent_cat" id="select_parent_cat" required>
-                            <option selected readonly disabled>{{ __('Select Parent category') . '--' }}</option>
+                            <option readonly disabled>{{ __('Select Parent category') . '--' }}</option>
                             @foreach ($parent_category as $parent_cat)
                                 <option value="{{ $parent_cat->id }}"
-                                    @if (old('select_parent_cat') && $parent_cat->id == old('select_parent_cat')) selected
-                        @elseif(!old('select_parent_cat') && $parent_cat->id == $product->parent_category_id)
-                        selected @endif>
+                                    @if (old('select_parent_cat') && $parent_cat->id == old('select_parent_cat'))   
+                                        selected
+                                    @elseif(!old('select_parent_cat') && $parent_cat->id == $product->parent_category_id)
+                                        selected 
+                                    @endif >
                                     {{ $parent_cat->name }}</option>
                             @endforeach
                         </select>
@@ -70,7 +73,7 @@
                                 class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="price" min="1" maxlength="10" placeholder="Enter Product price"
+                            name="price" min="1" maxlength="13" placeholder="Enter Product price"
                             value="{{ old('price', $product->price) }}" required>
                         @error('price')
                             <span class="text-red-500">{{ $message }}
@@ -83,7 +86,7 @@
                                 class="text-red-600">*</span></label>
                         <input type="number"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline numberonly"
-                            name="qty" min="0" placeholder="Enter Product Quantity"
+                            name="qty" min="1" max="4294967295" placeholder="Enter Product Quantity"
                             value="{{ old('qty', $product->qty) }}" required>
                         @error('qty')
                             <span class="text-red-500">{{ $message }}

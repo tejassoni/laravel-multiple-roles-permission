@@ -19,7 +19,8 @@ class ProductController extends Controller {
      */
     function __construct()
     {
-        $this->middleware('permission:product-list|product-create|product-edit|product-delete', ['only' => ['index', 'store']]);
+        //KEY : MULTIPERMISSION
+        $this->middleware('permission:product-list|product-create|product-edit|product-show|product-delete', ['only' => ['index', 'store']]);
         $this->middleware('permission:product-create', ['only' => ['create', 'store']]);
         $this->middleware('permission:product-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:product-delete', ['only' => ['destroy']]);
@@ -30,9 +31,8 @@ class ProductController extends Controller {
      * Display a listing of the resource.
      */
     public function index() {
-        return response()->view('products.index', [
-            'products' => Product::with(['getParentCategoryHasOne'])->orderBy('updated_at', 'desc')->get(),
-        ]);
+        $products = Product::with(['getParentCategoryHasOne'])->orderBy('updated_at', 'desc')->get();
+        return view('products.index', compact('products'));
     }
 
     /**
@@ -40,8 +40,8 @@ class ProductController extends Controller {
      */
     public function create() {
         $parent_category = Category::where('status', Category::STATUS_ACTIVE)->get();
-        $subCategories = SubCategory::where('status', Category::STATUS_ACTIVE)->get();
-        return view('products.create', compact('parent_category', 'subCategories'));
+     //   $subCategories = SubCategory::where('status', Category::STATUS_ACTIVE)->get();
+    return view('products.create', compact('parent_category', /*'subCategories'*/));
     }
 
     /**
@@ -71,18 +71,15 @@ class ProductController extends Controller {
      */
     public function show(Product $product) {
         $product->with('getParentCatHasOne')->where('user_id', auth()->user()->id);
-        $parent_category = Category::where('status', Category::STATUS_ACTIVE)->get();
-        $subCategories = SubCategory::where('status', Category::STATUS_ACTIVE)->get();
-        return view('products.show', compact('product', 'parent_category'));
+        return view('products.show', compact('product'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product) {
-        $product->with('getParentCatHasOne')->where('user_id', auth()->user()->id);
+    public function edit(Product $product) {        
         $parent_category = Category::where('status', Category::STATUS_ACTIVE)->get();
-        $subCategories = SubCategory::where('status', Category::STATUS_ACTIVE)->get();
+        //$subCategories = SubCategory::where('status', SubCategory::STATUS_ACTIVE)->get();
         return view('products.edit', compact('product', 'parent_category'));
     }
 
@@ -125,19 +122,16 @@ class ProductController extends Controller {
     private function _singleFileUploads($request = "", $htmlformfilename = "", $uploadfiletopath = "")
     {
         try {
-
             // check parameter empty Validation
             if (empty($request) || empty($htmlformfilename) || empty($uploadfiletopath)) {
                 throw new \Exception("Required Parameters are missing", 400);
             }
-
             // check if folder exist at public directory if not exist then create folder 0777 permission
             if (!file_exists($uploadfiletopath)) {
                 $oldmask = umask(0);
                 mkdir($uploadfiletopath, 0777, true);
                 umask($oldmask);
             }
-
             $fileNameOnly = preg_replace("/[^a-z0-9\_\-]/i", '', basename($request->file($htmlformfilename)->getClientOriginalName(), '.' . $request->file($htmlformfilename)->getClientOriginalExtension()));
             $fileFullName = $fileNameOnly . "_" . date('dmY') . "_" . time() . "." . $request->file($htmlformfilename)->getClientOriginalExtension();
             $path = $request->file($htmlformfilename)->storeAs($uploadfiletopath, $fileFullName);
