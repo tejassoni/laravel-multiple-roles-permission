@@ -22,7 +22,7 @@ class OrderUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_code' => 'required|string|max:10',
+            'order_code' => 'required|string|max:10|unique:orders,order_code,'.request()->segment(2),
             'products' => 'required|array',
             'products.*' => 'required',           
         ];

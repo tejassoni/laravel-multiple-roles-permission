@@ -11,11 +11,11 @@
                     class="inline-flex items-center px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-black uppercase transition duration-150 ease-in-out bg-green-600 border border-transparent rounded-md hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:shadow-outline-gray disabled:opacity-25">
                     Go back
                 </a>
-                <form action="{{ route('orders.update',$order->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('orders.update',$order->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="mb-4">
-                        <label for="name" class="block mb-2 text-sm font-bold text-gray-700">Order Code <span
+                        <label for="order_code" class="block mb-2 text-sm font-bold text-gray-700">Order Code <span
                             class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
@@ -27,7 +27,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="textrole" class="block mb-2 text-sm font-bold text-gray-700">Select Products <span
+                        <label for="products" class="block mb-2 text-sm font-bold text-gray-700">Select Products <span
                             class="text-red-600">*</span></label>
                         <select name="products[]" id="products[]"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -44,6 +44,11 @@
                             <span class="text-red-500">{{ $message }}
                             </span>
                         @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="total_amount" class="block mb-2 text-sm font-bold text-gray-700 inline-flex">Total Amount :</label>
+                        <span>{{ $order->total_amount }}</span>
                     </div>
 
                     <div>
