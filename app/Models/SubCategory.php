@@ -48,7 +48,5 @@ class SubCategory extends Model
     public function getCatUserHasOne()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
-    }
-
-    
+    }    
 }

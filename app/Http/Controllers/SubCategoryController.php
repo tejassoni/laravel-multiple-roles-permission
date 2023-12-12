@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Category;
 use App\Models\SubCategory;
-use Illuminate\Http\Request;
 use App\Http\Requests\SubCategoryStoreRequest;
 use App\Http\Requests\SubCategoryUpdateRequest;
 
@@ -19,7 +17,8 @@ class SubCategoryController extends Controller
      */
     function __construct()
     {
-        $this->middleware('permission:subcategory-list|subcategory-create|subcategory-edit|subcategory-delete', ['only' => ['index', 'store']]);
+        //KEY : MULTIPERMISSION
+        $this->middleware('permission:subcategory-list|subcategory-create|subcategory-edit|subcategory-show|subcategory-delete', ['only' => ['index', 'store']]);
         $this->middleware('permission:subcategory-create', ['only' => ['create', 'store']]);
         $this->middleware('permission:subcategory-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:subcategory-delete', ['only' => ['destroy']]);
@@ -30,10 +29,13 @@ class SubCategoryController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        return response()->view('subcategory.index', [
-            'subcategories' => SubCategory::with(['getCatUserHasOne', 'getParentCatHasOne'])->where('user_id', auth()->user()->id)->orderBy('updated_at', 'desc')->get(),
-        ]);
+    {        
+        $subcategories = SubCategory::with(['getCatUserHasOne', 'getParentCatHasOne'])
+        ->where('user_id', auth()->user()->id)
+        ->orderBy('updated_at', 'desc')
+        ->where('status',SubCategory::STATUS_ACTIVE)
+        ->get();
+        return view('subcategory.index', compact('subcategories'));
     }
 
     /**
@@ -41,7 +43,7 @@ class SubCategoryController extends Controller
      */
     public function create()
     {
-        $parent_category = Category::where('status', 1)
+        $parent_category = Category::where('status', SubCategory::STATUS_ACTIVE)
         ->get();
         return view('subcategory.create', \compact('parent_category'));
     }
@@ -55,7 +57,7 @@ class SubCategoryController extends Controller
 
         if ($created) { // inserted success
             return redirect()->route('subcategory.index')
-                ->withSuccess('created successfully...!');
+                ->withSuccess('Created successfully...!');
         }
 
         return redirect()
@@ -68,8 +70,7 @@ class SubCategoryController extends Controller
      * Display the specified resource.
      */
     public function show(SubCategory $subcategory)
-    {
-        $subcategory->with('getParentCatHasOne');
+    {        
         return view('subcategory.show', compact('subcategory'));
     }
 
@@ -77,9 +78,8 @@ class SubCategoryController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(SubCategory $subcategory)
-    {
-        $subcategory->with('getParentCatHasOne')->where('user_id', auth()->user()->id);
-        $parent_category = Category::where('status', 1)->where('user_id', auth()->user()->id)->get();
+    {       
+        $parent_category = Category::where('status', Category::STATUS_ACTIVE)->where('user_id', auth()->user()->id)->get();
         return view('subcategory.edit', compact('subcategory', 'parent_category'));
     }
 
@@ -100,22 +100,7 @@ class SubCategoryController extends Controller
     public function destroy(SubCategory $subcategory)
     {
         $subcategory->delete();
-
         return redirect()->route('subcategory.index')
             ->withSuccess('Deleted Successfully.');
-    }
-
-    /**
-     * Update the specified status.
-     */
-    public function updateStatus(Request $request)
-    {
-        $update_obj = SubCategory::find($request->id);
-        $update_obj->update(['status' => $request->status]);
-        return response()->json([
-            'status' => true,
-            'data' => [],
-            'message' => 'Updated Successfully..!'
-        ]);
-    }
+    }   
 }

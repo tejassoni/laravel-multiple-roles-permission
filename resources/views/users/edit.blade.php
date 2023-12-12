@@ -11,15 +11,39 @@
                     class="inline-flex items-center px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-black uppercase transition duration-150 ease-in-out bg-green-600 border border-transparent rounded-md hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:shadow-outline-gray disabled:opacity-25">
                     Go back
                 </a>
+                <!-- Calls when validation errors triggers starts -->
+                @if ($errors->any())
+                    <div class="alert alert-danger rounded-b text-red-600 px-4 py-3 shadow-md my-3" role="alert">
+                        <p><strong>Opps Something went wrong</strong></p>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <!-- Calls when validation errors triggers ends -->
+
+                <!-- Calls when session error triggers starts -->
+                @if (session('error'))
+                    <div class="alert alert-danger rounded-b text-red-600 px-4 py-3 shadow-md my-3" role="alert">
+                        <div class="flex">
+                            <div>
+                                <p class="text-sm text-danger">{{ session('error') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                <!-- Calls when session error triggers ends -->
                 <form action="{{ route('users.update', $user->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="mb-4">
                         <label for="textname" class="block mb-2 text-sm font-bold text-gray-700">Name <span
-                            class="text-red-600">*</span></label>
+                                class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="name" placeholder="Enter name" value="{{ old('name',$user->name) }}" required>
+                            name="name" placeholder="Enter name" value="{{ old('name', $user->name) }}" required>
                         @error('name')
                             <span class="text-red-500">{{ $message }}
                             </span>
@@ -27,10 +51,10 @@
                     </div>
                     <div class="mb-4">
                         <label for="textemail" class="block mb-2 text-sm font-bold text-gray-700">Email <span
-                            class="text-red-600">*</span></label>
+                                class="text-red-600">*</span></label>
                         <input type="text"
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                            name="email" placeholder="Enter email" value="{{ old('email',$user->email) }}" required>
+                            name="email" placeholder="Enter email" value="{{ old('email', $user->email) }}" required>
                         @error('email')
                             <span class="text-red-500">{{ $message }}
                             </span>
@@ -41,11 +65,12 @@
                         <label for="textrole" class="block mb-2 text-sm font-bold text-gray-700">Select Roles <span
                                 class="text-red-600">*</span></label>
                         <select name="roles[]" id="roles[]"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" multiple>
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            multiple>
                             <option disabled readonly>Choose a role</option>
                             @foreach ($roles as $role)
                                 <option value="{{ $role->name }}"
-                                    @if (old('roles') && in_array($role->name,old('roles'))) selected
+                                    @if (old('roles') && in_array($role->name, old('roles'))) selected
                             @elseif(!old('roles') && in_array($role->name, $user->getRoleNames()->toArray()))
                             selected @endif>
                                     {{ $role->name }}</option>

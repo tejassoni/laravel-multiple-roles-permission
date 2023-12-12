@@ -49,28 +49,41 @@ class OrderController extends Controller
      */
     public function store(OrderStoreRequest $request)
     {
-        $createdOrder = Order::create(['order_code' => $request->order_code, 'user_id' => auth()->user()->id]);
+        try {
+            $createdOrder = Order::firstOrCreate(['order_code' => $request->order_code, 'user_id' => auth()->user()->id]);
 
-        // Create an array of data for bulk insertion
-        $data = [];
-        foreach ($request->products as $productId) {
-            $data[] = [
-                'order_id' => $createdOrder->id,
-                'product_id' => $productId,
-            ];
-        }
-        OrderProductPivot::insert($data);
-        if ($createdOrder) { // inserted success
-            $createdOrder->total_amount = Product::whereIn('id', $request->products)->sum('price');
-            $createdOrder->save();
-            return redirect()->route('orders.index')
-                ->withSuccess('Created successfully...!');
-        }
+            // Create an array of data for bulk insertion
+            $data = [];
+            foreach ($request->products as $productId) {
+                $data[] = [
+                    'order_id' => $createdOrder->id,
+                    'product_id' => $productId,
+                ];
+            }
+            OrderProductPivot::insert($data);
+            if ($createdOrder) { // inserted success
+                $createdOrder->total_amount = Product::whereIn('id', $request->products)->sum('price');
+                $createdOrder->save();
+                \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success inserting data : ".json_encode([request()->all(),$data]));
+                return redirect()->route('orders.index')
+                    ->withSuccess('Created successfully...!');
+            }
 
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with('error', 'fails not created..!');
+            throw new \Exception('fails not created..!', 403);
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query inserting data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error inserting data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        }
     }
 
     /**
@@ -111,23 +124,38 @@ class OrderController extends Controller
      */
     public function update(OrderUpdateRequest $request, Order $order)
     {
-        // Delete old order and product record 
-        OrderProductPivot::where('order_id', $order->id)->delete();
+        try {
+            // Delete old order and product record 
+            OrderProductPivot::where('order_id', $order->id)->delete();
+            // Create an array of data for bulk insertion
+            $data = [];
+            foreach ($request->products as $productId) {
+                $data[] = [
+                    'order_id' => $order->id,
+                    'product_id' => $productId,
+                ];
+            }
+            OrderProductPivot::insert($data);
+            // update order details
+            $order->updateOrFail(['order_code' => $request->order_code, 'total_amount' => Product::whereIn('id', $request->products)->sum('price'), 'user_id' => auth()->user()->id]);
 
-        // Create an array of data for bulk insertion
-        $data = [];
-        foreach ($request->products as $productId) {
-            $data[] = [
-                'order_id' => $order->id,
-                'product_id' => $productId,
-            ];
+            \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success updating data : ".json_encode([request()->all(),$order]));
+            return redirect()->route('orders.index')
+                ->withSuccess('Updated Successfully...!');
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query updating data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error updating data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
         }
-        OrderProductPivot::insert($data);        
-        // update order details
-        $order->update(['order_code' => $request->order_code, 'total_amount' => Product::whereIn('id', $request->products)->sum('price'), 'user_id' => auth()->user()->id]);
-
-        return redirect()->route('orders.index')
-            ->withSuccess('Updated Successfully...!');
     }
 
     /**
@@ -135,10 +163,28 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        OrderProductPivot::where('order_id', $order->id)->delete(); // related order and product pivot data remove
-        $order->delete(); // main order table record remove
-        return redirect()->route('orders.index')
-            ->withSuccess('Deleted Successfully.');
+        try {
+            OrderProductPivot::where('order_id', $order->id)->delete(); // related order and product pivot data remove
+            $order->delete(); // main order table record remove
+            return redirect()->route('orders.index')
+                ->withSuccess('Deleted Successfully.');
+
+            throw new \Exception('fails not Deleted..!', 403);
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query deleting data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error deleting data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        }
+
     }
 
 }

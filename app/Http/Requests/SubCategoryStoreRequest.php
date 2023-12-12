@@ -22,7 +22,7 @@ class SubCategoryStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:100',            
+            'name' => 'required|string|max:100|unique:sub_categories,name',       
             'select_parent_cat' => 'required'
         ];
     }

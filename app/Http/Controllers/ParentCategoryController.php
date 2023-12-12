@@ -15,7 +15,8 @@ class ParentCategoryController extends Controller
      */
     function __construct()
     {        
-        $this->middleware('permission:category-list|category-create|category-edit|category-delete', ['only' => ['index', 'store']]);
+        //KEY : MULTIPERMISSION
+        $this->middleware('permission:category-list|category-create|category-edit|category-show|category-delete', ['only' => ['index', 'store']]);
         $this->middleware('permission:category-create', ['only' => ['create', 'store']]);
         $this->middleware('permission:category-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:category-delete', ['only' => ['destroy']]);    
@@ -26,10 +27,9 @@ class ParentCategoryController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        return response()->view('category.index', [
-            'categories' => Category::orderBy('updated_at', 'desc')->get(),
-        ]);
+    {        
+        $categories = Category::where('status',Category::STATUS_ACTIVE)->orderBy('updated_at','desc')->get();
+        return view('category.index', compact('categories'));
     }
 
     /**

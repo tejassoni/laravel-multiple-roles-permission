@@ -11,7 +11,32 @@
                     class="inline-flex items-center px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-black uppercase transition duration-150 ease-in-out bg-green-600 border border-transparent rounded-md hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:shadow-outline-gray disabled:opacity-25">
                     Go back
                 </a>
-                <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+                <!-- Calls when validation errors triggers starts -->
+                @if ($errors->any())
+                    <div class="alert alert-danger rounded-b text-red-600 px-4 py-3 shadow-md my-3" role="alert">
+                        <p><strong>Opps Something went wrong</strong></p>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <!-- Calls when validation errors triggers ends -->
+
+                <!-- Calls when session error triggers starts -->
+                @if (session('error'))
+                    <div class="alert alert-danger rounded-b text-red-600 px-4 py-3 shadow-md my-3" role="alert">
+                        <div class="flex">
+                            <div>
+                                <p class="text-sm text-danger">{{ session('error') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                <!-- Calls when session error triggers ends -->
+                <form action="{{ route('products.update', $product->id) }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="mb-4">
@@ -54,11 +79,9 @@
                             <option readonly disabled>{{ __('Select Parent category') . '--' }}</option>
                             @foreach ($parent_category as $parent_cat)
                                 <option value="{{ $parent_cat->id }}"
-                                    @if (old('select_parent_cat') && $parent_cat->id == old('select_parent_cat'))   
-                                        selected
+                                    @if (old('select_parent_cat') && $parent_cat->id == old('select_parent_cat')) selected
                                     @elseif(!old('select_parent_cat') && $parent_cat->id == $product->parent_category_id)
-                                        selected 
-                                    @endif >
+                                        selected @endif>
                                     {{ $parent_cat->name }}</option>
                             @endforeach
                         </select>

@@ -11,46 +11,65 @@
                     class="inline-flex items-center px-4 py-2 mb-4 text-xs font-semibold tracking-widest uppercase transition duration-150 ease-in-out bg-green-600 border border-transparent rounded-md hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:shadow-outline-gray disabled:opacity-25">
                     {{ __('Back') }}
                 </a>
+                <!-- Calls when validation errors triggers starts -->
+                @if ($errors->any())
+                    <div class="alert alert-danger rounded-b text-red-600 px-4 py-3 shadow-md my-3" role="alert">
+                        <p><strong>Opps Something went wrong</strong></p>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <!-- Calls when validation errors triggers ends -->
 
-                @if ($message = Session::get('error'))
-                    <div class="bg-green-100 border-t-4 border-green-500 rounded-b text-green-900 px-4 py-3 shadow-md my-3"
-                        role="alert">
+                <!-- Calls when session error triggers starts -->
+                @if (session('error'))
+                    <div class="alert alert-danger rounded-b text-red-600 px-4 py-3 shadow-md my-3" role="alert">
                         <div class="flex">
                             <div>
-                                <p class="text-sm text-danger">{{ $message }}</p>
+                                <p class="text-sm text-danger">{{ session('error') }}</p>
                             </div>
                         </div>
                     </div>
                 @endif
+                <!-- Calls when session error triggers ends -->
+                
                 <form action="{{ route('subcategory.update', $subcategory->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="mb-4">
                         <label for="name"
-                        class="block mb-2 text-sm font-bold text-gray-700">{{ __('Sub Category Name') }} <span
-                        class="text-red-600">*</span></label>
+                            class="block mb-2 text-sm font-bold text-gray-700">{{ __('Sub Category Name') }} <span
+                                class="text-red-600">*</span></label>
                         <input type="text" name="name" class="form-control"
                             placeholder="{{ __('Enter Sub Category name') }}" maxlength="100"
-                            value="{{ old('name',$subcategory->name) }}">
+                            value="{{ old('name', $subcategory->name) }}">
                         @error('name')
                             <span class="text-red-500 text-danger">{{ $message }}
                             </span>
                         @enderror
                     </div>
                     <div class="mb-4">
-                        <label for="subcategory_description"
-                        class="block mb-2 text-sm font-bold text-gray-700">{{ __('Sub Category Description') }} </label>
+                        <label for="description"
+                            class="block mb-2 text-sm font-bold text-gray-700">{{ __('Sub Category Description') }}
+                        </label>
                         <textarea class="form-control" cols="40" rows="7" name="description"
-                            placeholder="{{ __('Enter Category description') }}">{{ old('description',$subcategory->description) }}</textarea>
+                            placeholder="{{ __('Enter Category description') }}">{{ old('description', $subcategory->description) }}</textarea>
                     </div>
                     <div class="mb-4">
-                        <label for="parentcategory_name"
+                        <label for="select_parent_cat"
                             class="block mb-2 text-sm font-bold text-gray-700">{{ __('Parent category') }} <span
-                            class="text-red-600">*</span></label>
+                                class="text-red-600">*</span></label>
                         <select class="form-select" name="select_parent_cat" id="select_parent_cat">
-                            <option selected readonly disabled>{{ __('Select Parent category--') }}</option>
-                            @foreach ($parent_category ?? [] as $parent_cat)
-                            <option value="{{ $parent_cat->id }}" {{ $subcategory->parent_category_id == $parent_cat->id ? "selected" : "" }} >{{ $parent_cat->name }}</option>
+                            <option readonly disabled>{{ __('Select Parent category--') }}</option>
+                            @foreach ($parent_category as $parent_cat)
+                                <option value="{{ $parent_cat->id }}"
+                                    @if (old('select_parent_cat') && $parent_cat->id == old('select_parent_cat')) selected
+                                @elseif(!old('select_parent_cat') && $parent_cat->id == $subcategory->parent_category_id)
+                                        selected @endif>
+                                    {{ $parent_cat->name }}</option>
                             @endforeach
                         </select>
                         @error('select_parent_cat')
