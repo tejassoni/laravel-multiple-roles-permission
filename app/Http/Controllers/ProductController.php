@@ -65,12 +65,7 @@ class ProductController extends Controller
                 return redirect()->route('products.index')
                     ->withSuccess('Created successfully...!');
             }
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->with('error', 'fails not created..!');
-
+            throw new \Exception('fails not created..!', 403);
         } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
             \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query inserting data : " . $e->getMessage() . '');
             // You can also return a response to the user
@@ -152,8 +147,6 @@ class ProductController extends Controller
             \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success deleting data : " . json_encode([request()->all(), $product]));
             return redirect()->route('products.index')
                 ->withSuccess('Deleted Successfully.');
-
-            throw new \Exception('fails not Deleted..!', 403);
         } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
             \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query deleting data : " . $e->getMessage() . '');
             // You can also return a response to the user

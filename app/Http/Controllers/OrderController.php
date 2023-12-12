@@ -68,7 +68,6 @@ class OrderController extends Controller
                 return redirect()->route('orders.index')
                     ->withSuccess('Created successfully...!');
             }
-
             throw new \Exception('fails not created..!', 403);
         } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
             \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query inserting data : " . $e->getMessage() . '');
@@ -141,7 +140,7 @@ class OrderController extends Controller
 
             \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success updating data : ".json_encode([request()->all(),$order]));
             return redirect()->route('orders.index')
-                ->withSuccess('Updated Successfully...!');
+                ->withSuccess('Updated Successfully...!');            
         } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
             \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query updating data : " . $e->getMessage() . '');
             // You can also return a response to the user
@@ -167,11 +166,8 @@ class OrderController extends Controller
             OrderProductPivot::where('order_id', $order->id)->delete(); // related order and product pivot data remove
             $order->delete(); // main order table record remove
             \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success deleting data : " . json_encode([request()->all(), $order]));
-            
             return redirect()->route('orders.index')
-                ->withSuccess('Deleted Successfully.');
-
-            throw new \Exception('fails not Deleted..!', 403);
+                ->withSuccess('Deleted Successfully.');                
         } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
             \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query deleting data : " . $e->getMessage() . '');
             // You can also return a response to the user

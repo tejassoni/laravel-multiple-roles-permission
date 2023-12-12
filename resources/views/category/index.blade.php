@@ -11,17 +11,18 @@
               <div class="p-6 bg-white border-b border-gray-200">
                   <a title="new" href="{{ route('category.create') }}"
                       class="inline-flex items-center px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-black uppercase transition duration-150 ease-in-out bg-green-600 border border-transparent rounded-md hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:shadow-outline-gray disabled:opacity-25">Create New Category</a>
-
-                  @if ($message = Session::get('success'))
-                      <div class="bg-green-100 border-t-4 border-green-500 rounded-b text-green-900 px-4 py-3 shadow-md my-3"
+                <!-- Calls when session success triggers starts -->
+                  @if (session('success'))
+                      <div class="alert alert-success bg-green-100 border-t-4 border-green-500 rounded-b text-green-600 px-4 py-3 shadow-md my-3"
                           role="alert">
                           <div class="flex">
                               <div>
-                                  <p class="text-sm text-success">{{ $message }}</p>
+                                  <p class="text-sm text-success">{{ session('success') }}</p>
                               </div>
                           </div>
                       </div>
                   @endif
+                  <!-- Calls when session success triggers ends -->
                   <table id="category_tbl" class="w-full table-fixed" style="width:100%">
                       <thead>
                           <tr class="bg-gray-100">

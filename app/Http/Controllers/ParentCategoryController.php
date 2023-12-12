@@ -14,21 +14,21 @@ class ParentCategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     function __construct()
-    {        
+    {
         //KEY : MULTIPERMISSION
         $this->middleware('permission:category-list|category-create|category-edit|category-show|category-delete', ['only' => ['index', 'store']]);
         $this->middleware('permission:category-create', ['only' => ['create', 'store']]);
         $this->middleware('permission:category-edit', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:category-delete', ['only' => ['destroy']]);    
-        $this->middleware('permission:category-show', ['only' => ['show']]);    
+        $this->middleware('permission:category-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:category-show', ['only' => ['show']]);
     }
 
     /**
      * Display a listing of the resource.
      */
     public function index()
-    {        
-        $categories = Category::where('status',Category::STATUS_ACTIVE)->orderBy('updated_at','desc')->get();
+    {
+        $categories = Category::where('status', Category::STATUS_ACTIVE)->orderBy('updated_at', 'desc')->get();
         return view('category.index', compact('categories'));
     }
 
@@ -45,17 +45,29 @@ class ParentCategoryController extends Controller
      */
     public function store(CategoryStoreRequest $request)
     {
-        $created = Category::create(['name' => $request->name, 'description' => $request->description, 'user_id' => auth()->user()->id]);
+        try {
+            $created = Category::create(['name' => $request->name, 'description' => $request->description, 'user_id' => auth()->user()->id]);
 
-        if ($created) { // inserted success
-            return redirect()->route('category.index')
-                ->withSuccess('created successfully...!');
+            if ($created) { // inserted success
+                \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success inserting data : " . json_encode([request()->all()]));
+                return redirect()->route('category.index')
+                    ->withSuccess('created successfully...!');
+            }
+            throw new \Exception('fails not created..!', 403);
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query inserting data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error inserting data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
         }
-
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with('error', 'fails not created..!');
     }
 
     /**
@@ -79,10 +91,25 @@ class ParentCategoryController extends Controller
      */
     public function update(CategoryUpdateRequest $request, Category $category)
     {
-        $category->update($request->all());
-
-        return redirect()->route('category.index')
-            ->withSuccess('Updated Successfully...!');
+        try {
+            $category->update($request->all());
+            \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success updating data : " . json_encode([request()->all(), $category]));
+            return redirect()->route('category.index')
+                ->withSuccess('Updated Successfully...!');
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query updating data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error updating data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        }
     }
 
     /**
@@ -90,9 +117,24 @@ class ParentCategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        $category->delete();
-
-        return redirect()->route('category.index')
-            ->withSuccess('Deleted Successfully.');
+        try {
+            $category->delete();
+            \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success deleting data : " . json_encode([request()->all(), $category]));
+            return redirect()->route('category.index')
+                ->withSuccess('Deleted Successfully.');
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query deleting data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error deleting data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        }
     }
 }

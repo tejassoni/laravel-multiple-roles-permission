@@ -29,12 +29,12 @@ class SubCategoryController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {        
+    {
         $subcategories = SubCategory::with(['getCatUserHasOne', 'getParentCatHasOne'])
-        ->where('user_id', auth()->user()->id)
-        ->orderBy('updated_at', 'desc')
-        ->where('status',SubCategory::STATUS_ACTIVE)
-        ->get();
+            ->where('user_id', auth()->user()->id)
+            ->orderBy('updated_at', 'desc')
+            ->where('status', SubCategory::STATUS_ACTIVE)
+            ->get();
         return view('subcategory.index', compact('subcategories'));
     }
 
@@ -44,7 +44,7 @@ class SubCategoryController extends Controller
     public function create()
     {
         $parent_category = Category::where('status', SubCategory::STATUS_ACTIVE)
-        ->get();
+            ->get();
         return view('subcategory.create', \compact('parent_category'));
     }
 
@@ -53,24 +53,36 @@ class SubCategoryController extends Controller
      */
     public function store(SubCategoryStoreRequest $request)
     {
-        $created = SubCategory::create(['name' => $request->name, 'description' => $request->description, 'parent_category_id' => $request->select_parent_cat, 'user_id' => auth()->user()->id]);
+        try {
+            $created = SubCategory::create(['name' => $request->name, 'description' => $request->description, 'parent_category_id' => $request->select_parent_cat, 'user_id' => auth()->user()->id]);
 
-        if ($created) { // inserted success
-            return redirect()->route('subcategory.index')
-                ->withSuccess('Created successfully...!');
+            if ($created) { // inserted success
+                \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success inserting data : " . json_encode([request()->all()]));
+                return redirect()->route('subcategory.index')
+                    ->withSuccess('Created successfully...!');
+            }
+            throw new \Exception('fails not created..!', 403);
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query inserting data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error inserting data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
         }
-
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with('error', 'fails not created..!');
     }
 
     /**
      * Display the specified resource.
      */
     public function show(SubCategory $subcategory)
-    {        
+    {
         return view('subcategory.show', compact('subcategory'));
     }
 
@@ -78,7 +90,7 @@ class SubCategoryController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(SubCategory $subcategory)
-    {       
+    {
         $parent_category = Category::where('status', Category::STATUS_ACTIVE)->where('user_id', auth()->user()->id)->get();
         return view('subcategory.edit', compact('subcategory', 'parent_category'));
     }
@@ -88,10 +100,26 @@ class SubCategoryController extends Controller
      */
     public function update(SubCategoryUpdateRequest $request, SubCategory $subcategory)
     {
-        $subcategory->update(['name' => $request->name, 'description' => $request->description, 'parent_category_id' => $request->select_parent_cat, 'user_id' => auth()->user()->id]);
+        try {
+            $subcategory->update(['name' => $request->name, 'description' => $request->description, 'parent_category_id' => $request->select_parent_cat, 'user_id' => auth()->user()->id]);
+            \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success updating data : " . json_encode([request()->all(), $subcategory]));
+            return redirect()->route('subcategory.index')
+                ->withSuccess('Updated Successfully...!');
 
-        return redirect()->route('subcategory.index')
-            ->withSuccess('Updated Successfully...!');
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query updating data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error updating data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        }
     }
 
     /**
@@ -99,8 +127,24 @@ class SubCategoryController extends Controller
      */
     public function destroy(SubCategory $subcategory)
     {
-        $subcategory->delete();
-        return redirect()->route('subcategory.index')
-            ->withSuccess('Deleted Successfully.');
-    }   
+        try {
+            $subcategory->delete();
+            \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success deleting data : " . json_encode([request()->all(), $subcategory]));
+            return redirect()->route('subcategory.index')
+                ->withSuccess('Deleted Successfully.');
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query deleting data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error deleting data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        }
+    }
 }

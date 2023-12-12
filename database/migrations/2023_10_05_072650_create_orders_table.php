@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('order_code',10)->unique()->nullable();
-            $table->double('total_amount',12,2)->nullable();
+            $table->double('total_amount',16,2)->nullable();
             $table->integer('user_id')->unsigned()->nullable();
             $table->timestamps();
         });

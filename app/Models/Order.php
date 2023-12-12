@@ -45,17 +45,12 @@ class Order extends Model
      */
     public function getOrdersProductsHasManyThrough()
     {
-        // use Illuminate\Support\Facades\DB;
-        
-        
-        return $this->hasManyThrough(Product::class,OrderProductPivot::class,'order_id','id','product_id','product_id');
-       
+        return $this->hasManyThrough(Product::class,OrderProductPivot::class,'order_id','id','product_id','product_id');       
     }
 
     public function products()
     {
       return $this->belongsToMany( Product::class,OrderProductPivot::class, 'order_id', 'product_id');
-            //->withPivot([ ARRAY OF FIELDS YOU NEED FROM meta TABLE ]);
     }
 
     
