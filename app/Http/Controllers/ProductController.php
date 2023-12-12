@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 
-class ProductController extends Controller {
+class ProductController extends Controller
+{
 
     /**
      * Display a listing of the resource.
@@ -30,7 +31,8 @@ class ProductController extends Controller {
     /**
      * Display a listing of the resource.
      */
-    public function index() {
+    public function index()
+    {
         $products = Product::with(['getParentCategoryHasOne'])->orderBy('updated_at', 'desc')->get();
         return view('products.index', compact('products'));
     }
@@ -38,38 +40,58 @@ class ProductController extends Controller {
     /**
      * Show the form for creating a new resource.
      */
-    public function create() {
+    public function create()
+    {
         $parent_category = Category::where('status', Category::STATUS_ACTIVE)->get();
-     //   $subCategories = SubCategory::where('status', Category::STATUS_ACTIVE)->get();
-    return view('products.create', compact('parent_category', /*'subCategories'*/));
+        //   $subCategories = SubCategory::where('status', Category::STATUS_ACTIVE)->get();
+        return view('products.create', compact('parent_category', /*'subCategories'*/));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductStoreRequest $request) {
-        $fileName = null;
-        if($request->hasFile('image')) {
-            $filehandle = $this->_singleFileUploads($request, 'image', 'public/products');            
-            $fileName = $filehandle['data']['name'];
-        }
-        $created = Product::create(['name' => $request->name, 'description' => $request->description,'image' => $fileName, 'parent_category_id' => $request->select_parent_cat, 'price' => $request->price, 'qty' => $request->qty, 'user_id' => auth()->user()->id]);
+    public function store(ProductStoreRequest $request)
+    {
+        try {
+            $fileName = null;
+            if ($request->hasFile('image')) {
+                $filehandle = $this->_singleFileUploads($request, 'image', 'public/products');
+                $fileName = $filehandle['data']['name'];
+            }
+            $created = Product::create(['name' => $request->name, 'description' => $request->description, 'image' => $fileName, 'parent_category_id' => $request->select_parent_cat, 'price' => $request->price, 'qty' => $request->qty, 'user_id' => auth()->user()->id]);
 
-        if($created) { // inserted success
-            return redirect()->route('products.index')
-                ->withSuccess('Created successfully...!');
-        }
+            if ($created) { // inserted success
+                \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success insert data : " . json_encode([request()->all()]));
+                return redirect()->route('products.index')
+                    ->withSuccess('Created successfully...!');
+            }
 
-        return redirect()
-            ->back()
-            ->withInput()
-            ->with('error', 'fails not created..!');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'fails not created..!');
+
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query inserting data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error inserting data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Product $product) {
+    public function show(Product $product)
+    {
         $product->with('getParentCatHasOne')->where('user_id', auth()->user()->id);
         return view('products.show', compact('product'));
     }
@@ -77,7 +99,8 @@ class ProductController extends Controller {
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product) {        
+    public function edit(Product $product)
+    {
         $parent_category = Category::where('status', Category::STATUS_ACTIVE)->get();
         //$subCategories = SubCategory::where('status', SubCategory::STATUS_ACTIVE)->get();
         return view('products.edit', compact('product', 'parent_category'));
@@ -86,19 +109,37 @@ class ProductController extends Controller {
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductUpdateRequest $request, Product $product) {
-        $fileName = $product->image;
-        if($request->hasFile('image')) {
-            if (Storage::exists('/public/products/'.$product->image)) {
-                Storage::delete('/public/products/'.$product->image);
+    public function update(ProductUpdateRequest $request, Product $product)
+    {
+        try {
+            $fileName = $product->image;
+            if ($request->hasFile('image')) {
+                if (Storage::exists('/public/products/' . $product->image)) {
+                    Storage::delete('/public/products/' . $product->image);
+                }
+                $filehandle = $this->_singleFileUploads($request, 'image', 'public/products');
+                $fileName = $filehandle['data']['name'];
             }
-            $filehandle = $this->_singleFileUploads($request, 'image', 'public/products');            
-            $fileName = $filehandle['data']['name'];
-        }
-        $product->update(['name' => $request->name, 'description' => $request->description,'image' => $fileName, 'parent_category_id' => $request->select_parent_cat, 'price' => $request->price, 'qty' => $request->qty, 'user_id' => auth()->user()->id]);
+            $product->update(['name' => $request->name, 'description' => $request->description, 'image' => $fileName, 'parent_category_id' => $request->select_parent_cat, 'price' => $request->price, 'qty' => $request->qty, 'user_id' => auth()->user()->id]);
 
-        return redirect()->route('products.index')
-            ->withSuccess('Updated Successfully...!');
+            \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success updating data : " . json_encode([request()->all(), $product]));
+
+            return redirect()->route('products.index')
+                ->withSuccess('Updated Successfully...!');
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query updating data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error updating data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        }
     }
 
     /**
@@ -106,10 +147,27 @@ class ProductController extends Controller {
      */
     public function destroy(Product $product)
     {
-        $product->delete();
+        try {            
+            $product->delete();
+            \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success deleting data : " . json_encode([request()->all(), $product]));
+            return redirect()->route('products.index')
+                ->withSuccess('Deleted Successfully.');
 
-        return redirect()->route('products.index')
-            ->withSuccess('Deleted Successfully.');
+            throw new \Exception('fails not Deleted..!', 403);
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query deleting data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error deleting data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        }
     }
 
     /**
@@ -141,7 +199,7 @@ class ProductController extends Controller {
             $resp['message'] = "File uploaded successfully..!";
         } catch (\Exception $ex) {
             $resp['status'] = false;
-            $resp['data'] = ['name'=>null];
+            $resp['data'] = ['name' => null];
             $resp['message'] = 'File not uploaded...!';
             $resp['ex_message'] = $ex->getMessage();
             $resp['ex_code'] = $ex->getCode();

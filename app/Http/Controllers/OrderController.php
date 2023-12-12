@@ -166,6 +166,8 @@ class OrderController extends Controller
         try {
             OrderProductPivot::where('order_id', $order->id)->delete(); // related order and product pivot data remove
             $order->delete(); // main order table record remove
+            \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success deleting data : " . json_encode([request()->all(), $order]));
+            
             return redirect()->route('orders.index')
                 ->withSuccess('Deleted Successfully.');
 
@@ -184,7 +186,6 @@ class OrderController extends Controller
                 ->withInput()
                 ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
         }
-
     }
 
 }
