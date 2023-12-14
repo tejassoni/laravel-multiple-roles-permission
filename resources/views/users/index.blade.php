@@ -12,25 +12,41 @@
                     class="inline-flex items-center px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-black uppercase transition duration-150 ease-in-out bg-green-600 border border-transparent rounded-md hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:shadow-outline-gray disabled:opacity-25">
                     Create New User
                 </a>
-                @if ($message = Session::get('success'))
-                    <div class="bg-green-100 border-t-4 border-green-500 rounded-b text-green-900 px-4 py-3 shadow-md my-3"
+                <!-- Calls when session success triggers starts -->
+                @if (session('success'))
+                    <div class="alert alert-success bg-green-100 border-t-4 border-green-500 rounded-b text-green-600 px-4 py-3 shadow-md my-3"
                         role="alert">
                         <div class="flex">
                             <div>
-                                <p class="text-sm text-success">{{ $message }}</p>
-                            </div>
-                        </div>
-                    </div>
-                @elseif ($message = Session::get('error'))
-                    <div class="bg-red-100 border-t-4 border-red-500 rounded-b text-red-900 px-4 py-3 shadow-md my-3"
-                        role="alert">
-                        <div class="flex">
-                            <div>
-                                <p class="text-sm text-error">{{ $message }}</p>
+                                <p class="text-sm text-success">{{ session('success') }}</p>
                             </div>
                         </div>
                     </div>
                 @endif
+                <!-- Calls when session success triggers ends -->
+                <!-- Calls when validation errors triggers starts -->
+                @if ($errors->any())
+                    <div class="alert alert-danger rounded-b text-red-600 px-4 py-3 shadow-md my-3" role="alert">
+                        <p><strong>Opps Something went wrong</strong></p>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <!-- Calls when validation errors triggers ends -->
+                <!-- Calls when session error triggers starts -->
+                @if (session('error'))
+                    <div class="alert alert-danger rounded-b text-red-600 px-4 py-3 shadow-md my-3" role="alert">
+                        <div class="flex">
+                            <div>
+                                <p class="text-sm text-danger">{{ session('error') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                <!-- Calls when session error triggers ends -->
                 <table class="w-full table-fixed">
                     <thead>
                         <tr class="bg-gray-100">
@@ -65,7 +81,8 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" title="delete"
-                                                class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-red-600 border border-transparent rounded-md hover:bg-red-500 active:bg-red-700 focus:outline-none focus:border-red-700 focus:shadow-outline-gray disabled:opacity-25" onclick="return confirm('Are you sure you want to delete this ?')">
+                                                class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-red-600 border border-transparent rounded-md hover:bg-red-500 active:bg-red-700 focus:outline-none focus:border-red-700 focus:shadow-outline-gray disabled:opacity-25"
+                                                onclick="return confirm('Are you sure you want to delete this ?')">
                                                 Delete
                                             </button>
                                         </form>
