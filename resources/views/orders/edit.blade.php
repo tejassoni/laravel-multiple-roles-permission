@@ -47,7 +47,7 @@
                             name="order_code" placeholder="Enter Order Code"
                             value="{{ old('order_code', $order->order_code) }}" maxlength="10" required>
                         @error('order_code')
-                            <span class="text-red-500">{{ $message }}
+                            <span class="text-red-600">{{ $message }}
                             </span>
                         @enderror
                     </div>
@@ -68,7 +68,7 @@
                             @endforeach
                         </select>
                         @error('products')
-                            <span class="text-red-500">{{ $message }}
+                            <span class="text-red-600">{{ $message }}
                             </span>
                         @enderror
                     </div>

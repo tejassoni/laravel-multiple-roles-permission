@@ -45,7 +45,7 @@
                             placeholder="{{ __('Enter Sub category name') }}" maxlength="100"
                             value="{{ old('name') }}" required>
                         @error('name')
-                            <span class="text-red-500 text-danger">{{ $message }}
+                            <span class="text-red-600 text-danger">{{ $message }}
                             </span>
                         @enderror
                     </div>
@@ -69,7 +69,7 @@
                             @endforeach
                         </select>
                         @error('select_parent_cat')
-                            <span class="text-red-500 text-danger">{{ $message }}
+                            <span class="text-red-600 text-danger">{{ $message }}
                             </span>
                         @enderror
                     </div>

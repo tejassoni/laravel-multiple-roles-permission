@@ -46,7 +46,7 @@ class ParentCategoryController extends Controller
     public function store(CategoryStoreRequest $request)
     {
         try {
-            $created = Category::create(['name' => $request->name, 'description' => $request->description, 'user_id' => auth()->user()->id]);
+            $created = Category::firstOrCreate(['name' => $request->name, 'description' => $request->description, 'user_id' => auth()->user()->id]);
 
             if ($created) { // inserted success
                 \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success inserting data : " . json_encode([request()->all()]));
@@ -92,12 +92,12 @@ class ParentCategoryController extends Controller
     public function update(CategoryUpdateRequest $request, Category $category)
     {
         try {
-            $category->update($request->all());
+            $category->updateOrFail(['name' => $request->name, 'description' => $request->description, 'user_id' => auth()->user()->id]);
             \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success updating data : " . json_encode([request()->all(), $category]));
             return redirect()->route('category.index')
                 ->withSuccess('Updated Successfully...!');
         } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
-            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query updating data : " . $e->getMessage() . '');
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query updating data : " . $e->getMessage());
             // You can also return a response to the user
             return redirect()
                 ->back()

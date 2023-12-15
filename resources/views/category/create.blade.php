@@ -41,9 +41,9 @@
                         <label for="name" class="block mb-2 text-sm font-bold text-gray-700">Category Name <span
                                 class="text-red-600">*</span></label>
                         <input type="text" name="name" class="form-control" placeholder="Enter Category name"
-                            maxlength="100" value="{{ old('name') }}" onkeypress="return isString(event)">
+                            maxlength="100" value="{{ old('name') }}" required>
                         @error('name')
-                            <span class="text-red-500 text-danger">{{ $message }}
+                            <span class="text-red-600 text-danger">{{ $message }}
                             </span>
                         @enderror
                     </div>

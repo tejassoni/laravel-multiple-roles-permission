@@ -45,9 +45,9 @@
                                 class="text-red-600">*</span></label>
                         <input type="text" name="name" class="form-control"
                             placeholder="{{ __('Enter Sub Category name') }}" maxlength="100"
-                            value="{{ old('name', $subcategory->name) }}">
+                            value="{{ old('name', $subcategory->name) }}" required>
                         @error('name')
-                            <span class="text-red-500 text-danger">{{ $message }}
+                            <span class="text-red-600 text-danger">{{ $message }}
                             </span>
                         @enderror
                     </div>
@@ -62,7 +62,7 @@
                         <label for="select_parent_cat"
                             class="block mb-2 text-sm font-bold text-gray-700">{{ __('Parent category') }} <span
                                 class="text-red-600">*</span></label>
-                        <select class="form-select" name="select_parent_cat" id="select_parent_cat">
+                        <select class="form-select" name="select_parent_cat" id="select_parent_cat" required>
                             <option readonly disabled>{{ __('Select Parent category--') }}</option>
                             @foreach ($parent_category as $parent_cat)
                                 <option value="{{ $parent_cat->id }}"
@@ -73,7 +73,7 @@
                             @endforeach
                         </select>
                         @error('select_parent_cat')
-                            <span class="text-red-500 text-danger">{{ $message }}
+                            <span class="text-red-600 text-danger">{{ $message }}
                             </span>
                         @enderror
                     </div>

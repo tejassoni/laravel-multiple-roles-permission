@@ -44,7 +44,7 @@
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                             name="name" placeholder="Enter Product name" value="{{ old('name') }}" required>
                         @error('name')
-                            <span class="text-red-500">{{ $message }}
+                            <span class="text-red-600">{{ $message }}
                             </span>
                         @enderror
                     </div>
@@ -63,7 +63,7 @@
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                             name="image" accept=".jpg, .png, .jpeg, .gif" required>
                         @error('image')
-                            <span class="text-red-500">{{ $message }}
+                            <span class="text-red-600">{{ $message }}
                             </span>
                         @enderror
                     </div>
@@ -81,7 +81,7 @@
                             @endforeach
                         </select>
                         @error('select_parent_cat')
-                            <span class="text-red-500 text-danger">{{ $message }}
+                            <span class="text-red-600 text-danger">{{ $message }}
                             </span>
                         @enderror
                     </div>
@@ -94,7 +94,7 @@
                             name="price" min="1" maxlength="13" placeholder="Enter Product price"
                             value="{{ old('price') }}" required>
                         @error('price')
-                            <span class="text-red-500">{{ $message }}
+                            <span class="text-red-600">{{ $message }}
                             </span>
                         @enderror
                     </div>
@@ -107,7 +107,7 @@
                             name="qty" min="1" max="4294967295" placeholder="Enter Product Quantity"
                             value="{{ old('qty') }}" required>
                         @error('qty')
-                            <span class="text-red-500">{{ $message }}
+                            <span class="text-red-600">{{ $message }}
                             </span>
                         @enderror
                     </div>

@@ -43,7 +43,7 @@ class SubCategoryController extends Controller
      */
     public function create()
     {
-        $parent_category = Category::where('status', SubCategory::STATUS_ACTIVE)
+        $parent_category = Category::where('status', Category::STATUS_ACTIVE)
             ->get();
         return view('subcategory.create', \compact('parent_category'));
     }
@@ -54,7 +54,7 @@ class SubCategoryController extends Controller
     public function store(SubCategoryStoreRequest $request)
     {
         try {
-            $created = SubCategory::create(['name' => $request->name, 'description' => $request->description, 'parent_category_id' => $request->select_parent_cat, 'user_id' => auth()->user()->id]);
+            $created = SubCategory::firstOrCreate(['name' => $request->name, 'description' => $request->description, 'parent_category_id' => $request->select_parent_cat, 'user_id' => auth()->user()->id]);
 
             if ($created) { // inserted success
                 \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success inserting data : " . json_encode([request()->all()]));
@@ -101,7 +101,7 @@ class SubCategoryController extends Controller
     public function update(SubCategoryUpdateRequest $request, SubCategory $subcategory)
     {
         try {
-            $subcategory->update(['name' => $request->name, 'description' => $request->description, 'parent_category_id' => $request->select_parent_cat, 'user_id' => auth()->user()->id]);
+            $subcategory->updateOrFail(['name' => $request->name, 'description' => $request->description, 'parent_category_id' => $request->select_parent_cat, 'user_id' => auth()->user()->id]);
             \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success updating data : " . json_encode([request()->all(), $subcategory]));
             return redirect()->route('subcategory.index')
                 ->withSuccess('Updated Successfully...!');

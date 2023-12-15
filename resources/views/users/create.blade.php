@@ -44,7 +44,7 @@
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                             name="name" placeholder="Enter name" value="{{ old('name') }}" required>
                         @error('name')
-                            <span class="text-red-500">{{ $message }}
+                            <span class="text-red-600">{{ $message }}
                             </span>
                         @enderror
                     </div>
@@ -55,7 +55,7 @@
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                             name="email" placeholder="Enter email" value="{{ old('email') }}" required>
                         @error('email')
-                            <span class="text-red-500">{{ $message }}
+                            <span class="text-red-600">{{ $message }}
                             </span>
                         @enderror
                     </div>
@@ -66,7 +66,7 @@
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                             name="password" placeholder="Enter Password" value="{{ old('password') }}" required>
                         @error('password')
-                            <span class="text-red-500">{{ $message }}
+                            <span class="text-red-600">{{ $message }}
                             </span>
                         @enderror
                     </div>
@@ -77,7 +77,7 @@
                             class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                             name="password_confirmation" placeholder="Enter Confirm Password" required>
                         @error('password_confirmation')
-                            <span class="text-red-500">{{ $message }}
+                            <span class="text-red-600">{{ $message }}
                             </span>
                         @enderror
                     </div>
@@ -95,7 +95,7 @@
                             @endforeach
                         </select>
                         @error('roles')
-                            <span class="text-red-500">{{ $message }}
+                            <span class="text-red-600">{{ $message }}
                             </span>
                         @enderror
                     </div>
