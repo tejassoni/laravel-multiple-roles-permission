@@ -12,16 +12,12 @@
                     Go back
                 </a>
                 <div class="mb-4">
-                    <label for="textname" class="block mb-2 text-sm font-bold text-gray-700">Name</label>
-                    <input type="text"
-                        class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                        name="name" value="{{ $user->name }}" @readonly(true) @disabled(true)>
+                    <label for="name"
+                    class="block mb-2 text-sm font-bold text-gray-700"><b>{{ __('User name') }} : </b><span>{{ $user->name }}</span> </label> 
                 </div>
                 <div class="mb-4">
-                    <label for="textemail" class="block mb-2 text-sm font-bold text-gray-700">Email</label>
-                    <input type="text"
-                        class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                        name="email" value="{{ $user->email }}" @readonly(true) @disabled(true)>
+                    <label for="email"
+                    class="block mb-2 text-sm font-bold text-gray-700"><b>{{ __('User email') }} : </b><span>{{ $user->email }}</span> </label> 
                 </div>
 
 

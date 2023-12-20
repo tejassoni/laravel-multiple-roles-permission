@@ -17,7 +17,8 @@ class RoleController extends Controller
      */
     function __construct()
     {
-        $this->middleware('permission:role-list|role-create|role-edit|role-delete', ['only' => ['index', 'store']]);
+        //KEY : MULTIPERMISSION
+        $this->middleware('permission:role-list|role-create|role-edit|role-show|role-delete', ['only' => ['index', 'store']]);
         $this->middleware('permission:role-create', ['only' => ['create', 'store']]);
         $this->middleware('permission:role-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:role-delete', ['only' => ['destroy']]);
@@ -29,9 +30,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return response()->view('roles.index', [
-            'roles' => Role::orderBy('updated_at', 'desc')->get(),
-        ]);
+        $roles = Role::orderBy('updated_at', 'desc')->get();
+        return view('roles.index', compact('roles'));
     }
 
     /**
@@ -53,10 +53,29 @@ class RoleController extends Controller
      */
     public function store(RoleStoreRequest $request)
     {
-        $role = Role::create(['name' => $request->input('name')]);
-        $role->syncPermissions($request->input('permission'));
-        return redirect()->route('roles.index')
-            ->with('success', 'Role created successfully');
+        try {
+            $role = Role::firstOrCreate(['name' => $request->input('name')]);
+            $role->syncPermissions($request->input('permission'));
+            if ($role) {
+                \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success inserting data : " . json_encode([request()->all()]));
+                return redirect()->route('roles.index')
+                    ->with('success', 'Role created successfully');
+            }
+            throw new \Exception('fails not created..!', 403);
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query inserting data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error inserting data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        }
     }
 
     /**
@@ -65,29 +84,27 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Role $role)
     {
-        $role = Role::find($id);        
         $rolePermissions = Permission::join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
-            ->where("role_has_permissions.role_id", $id)
-            ->get();            
+            ->where("role_has_permissions.role_id", $role->id)
+            ->get();
         return view('roles.show', compact('role', 'rolePermissions'));
     }
 
-     /**
+    /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Role $role)
     {
-        $role = Role::find($id);
         $permissions = Permission::get();
         $rolePermissions = Permission::join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
-            ->where("role_has_permissions.role_id", $id)
+            ->where("role_has_permissions.role_id", $role->id)
             ->get()->pluck('id')->toArray();
-        return view('roles.edit', compact('role', 'rolePermissions','permissions'));
+        return view('roles.edit', compact('role', 'rolePermissions', 'permissions'));
     }
 
     /**
@@ -96,23 +113,54 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(RoleUpdateRequest $request, $id)
-    {               
-        $role = Role::find($id);                     
-        $role->syncPermissions($request->permission);
-        $role = $role->update(['name' => $request->input('name')]);
-        return redirect()->route('roles.index')
-            ->with('success', 'Role updated successfully');
+    public function update(RoleUpdateRequest $request, Role $role)
+    {
+        try {
+            $role->syncPermissions($request->permission);
+            $role = $role->updateOrFail(['name' => $request->input('name')]);
+            \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success updating data : " . json_encode([request()->all(), $role]));
+            return redirect()->route('roles.index')
+                ->with('success', 'Role updated successfully');
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query updating data : " . $e->getMessage());
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error updating data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Role $role)
-    {        
-        $role->delete();
-        return redirect()->route('roles.index')
-            ->withSuccess('Deleted Successfully.');
+    {
+        try {
+            $role->delete();
+            \Log::info(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Success deleting data : " . json_encode([request()->all(), $role]));
+            return redirect()->route('roles.index')
+                ->withSuccess('Deleted Successfully.');
+        } catch (\Illuminate\Database\QueryException $e) { // Handle query exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error Query deleting data : " . $e->getMessage() . '');
+            // You can also return a response to the user
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        } catch (\Exception $e) { // Handle any runtime exception
+            \Log::error(" file '" . __CLASS__ . "' , function '" . __FUNCTION__ . "' , Message : Error deleting data : " . $e->getMessage() . '');
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', "error occurs failed to proceed...! " . $e->getMessage());
+        }
     }
 
 

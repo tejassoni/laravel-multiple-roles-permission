@@ -12,10 +12,8 @@
                     Go back
                 </a>
                 <div class="mb-4">
-                    <label for="textname" class="block mb-2 text-sm font-bold text-gray-700">Name</label>
-                    <input type="text"
-                        class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                        name="name" value={{ $role->name }} @readonly(true) @disabled(true)>
+                    <label for="name"
+                      class="block mb-2 text-sm font-bold text-gray-700"><b>{{ __('Role name') }} : </b><span>{{ $role->name }}</span> </label> 
                 </div>
                 <div class="mb-4">
                     @foreach ($rolePermissions as $permission)

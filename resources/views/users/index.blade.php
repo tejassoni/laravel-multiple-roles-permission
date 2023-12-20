@@ -64,7 +64,7 @@
                                         class="underline">{{ $user->email }}</a></td>
                                 <td class="px-4 py-2 border">
                                     @foreach ($user->getRoleNames() as $v)
-                                        <label class="badge badge-success">{{ $v }}</label>
+                                        <label class="badge badge-success">{{ $v }}</label> ,
                                     @endforeach
                                 </td>
                                 <td class="px-4 py-2 border">

@@ -83,11 +83,4 @@
             </div>
         </div>
     </div>
-    @push('footer-scripts')
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('#category_tbl').DataTable();
-            });
-        </script>
-    @endpush
 </x-app-layout>
