@@ -72,6 +72,7 @@
                                 <td class="px-4 py-2 border">
                                     @if (auth()->user()->id != $user->id)
                                         <form action="{{ route('users.destroy', $user->id) }}" method="POST">
+                                             <!-- KEY : MULTIPERMISSION starts -->
                                             @can('user-show')
                                                 <a title="show" href="{{ route('users.show', $user->id) }}"
                                                     class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-500 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25">
@@ -93,6 +94,7 @@
                                                     Delete
                                                 </button>
                                             @endcan
+                                             <!-- KEY : MULTIPERMISSION ends -->
                                         </form>
                                     @endif
                                 </td>

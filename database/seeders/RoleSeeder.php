@@ -10,6 +10,7 @@ class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     * KEY : MULTIPERMISSION
      */
     public function run(): void
     {

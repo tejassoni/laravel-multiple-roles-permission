@@ -9,6 +9,7 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
+     * KEY : MULTIPERMISSION
      */
     public function run(): void
     {

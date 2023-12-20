@@ -8,12 +8,14 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 py-4">
+                 <!-- KEY : MULTIPERMISSION starts -->
                 @can('product-create')
                 <a title="new" href="{{ route('products.create') }}"
                     class="inline-flex items-center px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-black uppercase transition duration-150 ease-in-out bg-green-600 border border-transparent rounded-md hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:shadow-outline-gray disabled:opacity-25">
                     Create New Product
                 </a>
                 @endcan
+                 <!-- KEY : MULTIPERMISSION ends -->
                 <!-- Calls when session success triggers starts -->
                 @if (session('success'))
                     <div class="alert alert-success bg-green-100 border-t-4 border-green-500 rounded-b text-green-600 px-4 py-3 shadow-md my-3"
@@ -71,6 +73,7 @@
                                 <td class="px-4 py-2 border">{{ $product->qty }}</td>
                                 <td class="px-4 py-2 border">
                                         <form action="{{ route('products.destroy', $product->id) }}" method="POST">
+                                             <!-- KEY : MULTIPERMISSION starts -->
                                             @can('product-show')
                                             <a title="show" href="{{ route('products.show', $product->id) }}"
                                                 class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-500 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25">
@@ -91,6 +94,7 @@
                                                 Delete
                                             </button>
                                             @endcan
+                                             <!-- KEY : MULTIPERMISSION ends -->
                                         </form>
                                 </td>
                             </tr>

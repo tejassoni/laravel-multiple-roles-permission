@@ -8,12 +8,14 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg px-4 py-4">
+                 <!-- KEY : MULTIPERMISSION starts -->
                 @can('order-create')
                 <a title="new" href="{{ route('orders.create') }}"
                     class="inline-flex items-center px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-black uppercase transition duration-150 ease-in-out bg-green-600 border border-transparent rounded-md hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:shadow-outline-gray disabled:opacity-25">
                     Create New Order
                 </a>
                 @endcan
+                 <!-- KEY : MULTIPERMISSION ends -->
                 
                 <!-- Calls when session success triggers starts -->
                 @if (session('success'))
@@ -74,6 +76,7 @@
                                 <td class="px-4 py-2 border">{{ $order->total_amount }}</td>
                                 <td class="px-4 py-2 border">
                                     <form action="{{ route('orders.destroy', $order->id) }}" method="POST">
+                                         <!-- KEY : MULTIPERMISSION starts -->
                                         @can('order-show')
                                         <a title="show" href="{{ route('orders.show', $order->id) }}"
                                             class="inline-flex items-center px-4 py-2 mx-2 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-gray-500 border border-transparent rounded-md hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray disabled:opacity-25">
@@ -95,6 +98,7 @@
                                             Delete
                                         </button>
                                         @endcan
+                                         <!-- KEY : MULTIPERMISSION ends -->
                                     </form>
                                 </td>
                             </tr>
